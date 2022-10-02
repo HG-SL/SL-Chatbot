@@ -1,0 +1,20 @@
+$shocklogic-orange: #FF6E0B;
+
+::ng-deep nb-layout-column {
+  justify-content: center;
+  display: flex;
+}
+nb-chat {
+  width: 300px;
+  height: 400px;
+}
+
+button{
+  color: black;
+  background: white;
+  width: 100%;
+}
+
+.mt-10{
+  margin-top: 10px;
+}
