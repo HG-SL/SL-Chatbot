@@ -1,60 +1,62 @@
-CREATE TABLE Country (
+CREATE SCHEMA BI;
+
+CREATE TABLE BI.Country (
     Country_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
     Country_Name nvarchar(255) NOT NULL UNIQUE,
-    Country_Code nvarchar(100) NOT NULL UNIQUE
+    Country_Code nvarchar(100) UNIQUE
 );
 
-CREATE TABLE State (
+CREATE TABLE BI.State (
     State_Id  INT NOT NULL  IDENTITY  PRIMARY KEY,
     State_Name nvarchar(255) NOT NULL,
     FK_Country_Id INT,
     CONSTRAINT FK_Country FOREIGN KEY (FK_Country_Id)
-    REFERENCES Country(Country_Id)
+    REFERENCES BI.Country(Country_Id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
-CREATE TABLE City (
+CREATE TABLE BI.City (
     City_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
     City_Name nvarchar(255) NOT NULL,
     FK_State_Id INT,
     CONSTRAINT FK_State FOREIGN KEY (FK_State_Id)
-    REFERENCES State(State_Id)
+    REFERENCES BI.State(State_Id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
-CREATE TABLE Organization (
+CREATE TABLE BI.Organization (
     Organization_Id  INT NOT NULL  IDENTITY  PRIMARY KEY,
 	Organization_Name nvarchar(200) NOT NULL UNIQUE,
     Organization_Type nvarchar(100) NOT NULL, 
     CONSTRAINT CHK_Organization_Type CHECK (Organization_Type IN ('Corporate', 'Association', 'Non-profit', 'Agency', 'PCO', 'AMC'))
 );
 
-CREATE TABLE Client (
+CREATE TABLE BI.Client (
     Client_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
 	Client_Name nvarchar(50),
-    Client_Last_Name nvarchar(50) 
-    Client_Telephone nvarchar(255) 
+    Client_Last_Name nvarchar(50), 
+    Client_Telephone nvarchar(255), 
     Client_Email nvarchar(255) NOT NULL,
     User_Agent nvarchar(255),
     FK_Organization_Id INT,
     FK_City_Id INT,
 	CONSTRAINT FK_Organization FOREIGN KEY (FK_Organization_Id)
-    REFERENCES Organization(Organization_Id),
+    REFERENCES BI.Organization(Organization_Id),
     CONSTRAINT FK_City FOREIGN KEY (FK_City_Id)
-    REFERENCES City(City_Id)
+    REFERENCES BI.City(City_Id)
 	ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
-CREATE TABLE Status (
+CREATE TABLE BI.Status (
     Status_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
     Status_Description nvarchar(50) NOT NULL, --Should be a check like (Pending, Active, Solved,...)
     CONSTRAINT CHK_Status CHECK (Status_Description IN ('Active', 'Pending', 'Solved', 'On Hold'))
 );
 
-CREATE TABLE Question (
+CREATE TABLE BI.Question (
     Question_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
     Description nvarchar(255) NOT NULL,
     Priority nvarchar(50) NOT NULL, --Should be a check like (High, Medium, Low,...)
@@ -63,71 +65,71 @@ CREATE TABLE Question (
     FK_Client_Id INT,
     CONSTRAINT CHK_Question CHECK (Priority IN ('Urgent','High', 'Medium', 'Low')),
     CONSTRAINT FK_Status FOREIGN KEY (FK_Status_Id)
-    REFERENCES Status(Status_Id),
+    REFERENCES BI.Status(Status_Id),
     CONSTRAINT FK_Client FOREIGN KEY (FK_Client_Id)
-    REFERENCES Client(Client_Id)
+    REFERENCES BI.Client(Client_Id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
-CREATE TABLE Podruct_Type (
+CREATE TABLE BI.Podruct_Type (
     Product_Type_Id INT NOT NULL IDENTITY  PRIMARY KEY,
     Type_Name nvarchar(50) NOT NULL, --Should be a check like (Virtual platform, Scanning platfomr, Printing solution, ...)
     Description nvarchar(255) 
 );
 
-CREATE TABLE Product (
+CREATE TABLE BI.Product (
     Product_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
     Product_Name nvarchar(50) NOT NULL,
     FK_Product_Type_Id INT,
     CONSTRAINT FK_Product_Type FOREIGN KEY (FK_Product_Type_Id)
-    REFERENCES Podruct_Type(Product_Type_Id)
+    REFERENCES BI.Podruct_Type(Product_Type_Id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
-CREATE TABLE Product_Question (
+CREATE TABLE BI.Product_Question (
     Product_Question_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
     FK_Product_Id INT,
     FK_Question_Id INT,
     CONSTRAINT FK_Product FOREIGN KEY (FK_Product_Id)
-    REFERENCES Product(Product_Id),
+    REFERENCES BI.Product(Product_Id),
     CONSTRAINT FK_Question FOREIGN KEY (FK_Question_Id)
-    REFERENCES Question(Question_Id)
+    REFERENCES BI.Question(Question_Id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
-CREATE TABLE Department (
+CREATE TABLE BI.Department (
     Department_Id INT NOT NULL IDENTITY  PRIMARY KEY,
     Department_Name nvarchar(50) NOT NULL, --Should be a check like (Support, Bizdev, Marketing, ...)
     CONSTRAINT CHK_Department CHECK (Department_Name IN ('Support', 'Bizdev', 'Marketing')),
 );
 
-CREATE TABLE Employee (
+CREATE TABLE BI.Employee (
     Employee_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
     Employee_Name nvarchar(50),
     Employee_Last_Name nvarchar(50),
     Employee_User_Id nvarchar(50) NOT NULL,
     FK_Deparment_Id INT,
     CONSTRAINT FK_Deparment FOREIGN KEY (FK_Deparment_Id)
-    REFERENCES Department(Department_Id)
+    REFERENCES BI.Department(Department_Id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
-CREATE TABLE Answer (
+CREATE TABLE BI.Answer (
     Answer_Id  INT NOT NULL  IDENTITY  PRIMARY KEY,
     Result nvarchar(255) NOT NULL,
-    Qualification nvarchar(50), --Should be a check like (High, Medium, Low,...)
+    Qualification INT NOT NULL, --Should be a check like (High, Medium, Low,...)
     Answer_Date smalldatetime NOT NULL,
     FK_Question_Id INT, 
     FK_Employee_Id INT,
-    CONSTRAINT CHK_Qualification CHECK (Qualification IN (1,2,3,4,5)),
-    CONSTRAINT FK_Question FOREIGN KEY (FK_Question_Id)
-    REFERENCES Question(Question_Id),
+    CONSTRAINT CHK_Qualification CHECK (Qualification IN (1,2,3,4,5, NULL)),
+    CONSTRAINT FK_Question_Answer FOREIGN KEY (FK_Question_Id)
+    REFERENCES BI.Question(Question_Id),
     CONSTRAINT FK_Employee FOREIGN KEY (FK_Employee_Id)
-    REFERENCES Employee(Employee_Id)
+    REFERENCES BI.Employee(Employee_Id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
