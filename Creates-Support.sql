@@ -61,9 +61,11 @@ CREATE TABLE BI.Question (
     Description nvarchar(255) NOT NULL,
     Priority nvarchar(50) NOT NULL, --Should be a check like (High, Medium, Low,...)
     Question_Date smalldatetime NOT NULL,
+    Question_Type nvarchar(50) NOT NULL,
     FK_Status_Id INT, 
     FK_Client_Id INT,
     CONSTRAINT CHK_Question CHECK (Priority IN ('Urgent','High', 'Medium', 'Low')),
+    CONSTRAINT CHK_Question_Type CHECK (Question_Type IN ('knowledge','Failure')), --We define 0 for knowledge or 1 for a failure
     CONSTRAINT FK_Status FOREIGN KEY (FK_Status_Id)
     REFERENCES BI.Status(Status_Id),
     CONSTRAINT FK_Client FOREIGN KEY (FK_Client_Id)
@@ -121,11 +123,11 @@ CREATE TABLE BI.Employee (
 CREATE TABLE BI.Answer (
     Answer_Id  INT NOT NULL  IDENTITY  PRIMARY KEY,
     Result nvarchar(255) NOT NULL,
-    Qualification INT NOT NULL, --Should be a check like (High, Medium, Low,...)
+    Qualification INT, --Should be a check like (High, Medium, Low,...)
     Answer_Date smalldatetime NOT NULL,
     FK_Question_Id INT, 
     FK_Employee_Id INT,
-    CONSTRAINT CHK_Qualification CHECK (Qualification IN (1,2,3,4,5, NULL)),
+    CONSTRAINT CHK_Qualification CHECK (Qualification IN (0,1,2,3,4,5)),
     CONSTRAINT FK_Question_Answer FOREIGN KEY (FK_Question_Id)
     REFERENCES BI.Question(Question_Id),
     CONSTRAINT FK_Employee FOREIGN KEY (FK_Employee_Id)

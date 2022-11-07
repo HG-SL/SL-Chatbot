@@ -2,17 +2,18 @@ CREATE SCHEMA BI_DW;
 
 CREATE TABLE BI_DW.Dim_Time(
     Sk_Dim_Time INT NOT NULL IDENTITY  PRIMARY KEY,
-    Year nvarchar(25) NOT NULL,
-    Month nvarchar(25) NOT NULL,
-    Day nvarchar(25) NOT NULL,
-    Full_Date nvarchar(25) smalldatetime NOT NULL,
+    Year_Name nvarchar(25) NOT NULL,
+    Month_Name nvarchar(25) NOT NULL,
+    Day_Name nvarchar(25) NOT NULL,
+    Full_Date smalldatetime NOT NULL,
     Full_Hour nvarchar(50) NOT NULL,
     Flag_Weekend BIT
 );
 
 CREATE TABLE BI_DW.Dim_Status (
     SK_Dim_Status INT NOT NULL IDENTITY  PRIMARY KEY,
-    Status_Description nvarchar(50) NOT NULL
+    Status_Description nvarchar(50) NOT NULL,
+    CONSTRAINT CHK_Status CHECK (Status_Description IN ('Active', 'Pending', 'Solved', 'On Hold'))
 );
 
 CREATE TABLE BI_DW.Dim_Location (
@@ -31,13 +32,15 @@ CREATE TABLE BI_DW.Dim_Employee (
 
 CREATE TABLE BI_DW.Dim_Department (
     SK_Dim_Department INT NOT NULL IDENTITY  PRIMARY KEY,
-    Department_Name nvarchar(50) NOT NULL
+    Department_Name nvarchar(50) NOT NULL,
+    CONSTRAINT CHK_Department CHECK (Department_Name IN ('Support', 'Bizdev', 'Marketing')),
 );
 
 CREATE TABLE BI_DW.Dim_Organization (
     SK_Dim_Organization  INT NOT NULL  IDENTITY  PRIMARY KEY,
 	Organization_Name nvarchar(200) NOT NULL UNIQUE,
-    Organization_Type nvarchar(100) NOT NULL
+    Organization_Type nvarchar(100) NOT NULL,
+    CONSTRAINT CHK_Organization_Type CHECK (Organization_Type IN ('Corporate', 'Association', 'Non-profit', 'Agency', 'PCO', 'AMC'))
 );
 
 CREATE TABLE BI_DW.Dim_Client (
@@ -64,11 +67,16 @@ CREATE TABLE BI_DW.Fact_Requests (
     FK_Organization_Id INT,
     FK_Client_Id INT,
     FK_Product_Id INT,
-    Qualification INT NOT NULL,
+    Qualification INT,
     Question nvarchar(255) NOT NULL,
+    Question_Type nvarchar(50) NOT NULL,
     Response nvarchar(50) NOT NULL,
-    CONSTRAINT FK_Time FOREIGN KEY (Sk_Dim_Time)
-    REFERENCES BI_DW.Dim_Time(Status_Id),
+    
+   	CONSTRAINT CHK_Question_Type CHECK (Question_Type IN ('knowledge','Failure')), --We define 0 for knowledge or 1 for a failure
+   	CONSTRAINT CHK_Qualification CHECK (Qualification IN (0,1,2,3,4,5)),
+   	
+	CONSTRAINT FK_Time FOREIGN KEY (FK_Time_Id)
+    REFERENCES BI_DW.Dim_Time(Sk_Dim_Time),
 
     CONSTRAINT FK_Status FOREIGN KEY (FK_Status_Id)
     REFERENCES BI_DW.Dim_Status(SK_Dim_Status),
@@ -93,3 +101,4 @@ CREATE TABLE BI_DW.Fact_Requests (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
+
