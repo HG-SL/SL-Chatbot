@@ -1,7 +1,7 @@
 CREATE SCHEMA BI_DW;
 
 CREATE TABLE BI_DW.Dim_Time(
-    Sk_Dim_Time INT NOT NULL IDENTITY  PRIMARY KEY,
+    Sk_Dim_Time INT NOT NULL  PRIMARY KEY,
     Year_Name nvarchar(25) NOT NULL,
     Month_Name nvarchar(25) NOT NULL,
     Day_Name nvarchar(25) NOT NULL,
@@ -11,40 +11,40 @@ CREATE TABLE BI_DW.Dim_Time(
 );
 
 CREATE TABLE BI_DW.Dim_Status (
-    SK_Dim_Status INT NOT NULL IDENTITY  PRIMARY KEY,
+    SK_Dim_Status INT NOT NULL  PRIMARY KEY,
     Status_Description nvarchar(50) NOT NULL,
     CONSTRAINT CHK_Status CHECK (Status_Description IN ('Active', 'Pending', 'Solved', 'On Hold'))
 );
 
 CREATE TABLE BI_DW.Dim_Location (
-    SK_Dim_Location INT NOT NULL  IDENTITY  PRIMARY KEY,
+    SK_Dim_Location INT NOT NULL PRIMARY KEY,
     Country_Name nvarchar(255) NOT NULL,
     State_Name nvarchar(255) NOT NULL,
     City_Name nvarchar(255) NOT NULL
 );
 
 CREATE TABLE BI_DW.Dim_Employee (
-    SK_Dim_Employee INT NOT NULL  IDENTITY  PRIMARY KEY,
+    SK_Dim_Employee INT NOT NULL PRIMARY KEY,
     Employee_Name nvarchar(50),
     Employee_Last_Name nvarchar(50),
     Employee_User_Id nvarchar(50) NOT NULL
 );
 
 CREATE TABLE BI_DW.Dim_Department (
-    SK_Dim_Department INT NOT NULL IDENTITY  PRIMARY KEY,
+    SK_Dim_Department INT NOT NULL PRIMARY KEY,
     Department_Name nvarchar(50) NOT NULL,
     CONSTRAINT CHK_Department CHECK (Department_Name IN ('Support', 'Bizdev', 'Marketing')),
 );
 
 CREATE TABLE BI_DW.Dim_Organization (
-    SK_Dim_Organization  INT NOT NULL  IDENTITY  PRIMARY KEY,
+    SK_Dim_Organization  INT NOT NULL PRIMARY KEY,
 	Organization_Name nvarchar(200) NOT NULL UNIQUE,
     Organization_Type nvarchar(100) NOT NULL,
     CONSTRAINT CHK_Organization_Type CHECK (Organization_Type IN ('Corporate', 'Association', 'Non-profit', 'Agency', 'PCO', 'AMC'))
 );
 
 CREATE TABLE BI_DW.Dim_Client (
-    SK_Dim_Client INT NOT NULL  IDENTITY  PRIMARY KEY,
+    SK_Dim_Client INT NOT NULL PRIMARY KEY,
 	Client_Name nvarchar(50),
     Client_Last_Name nvarchar(50), 
     Client_Telephone nvarchar(255), 
@@ -53,7 +53,7 @@ CREATE TABLE BI_DW.Dim_Client (
 );
 
 CREATE TABLE BI_DW.Dim_Product (
-    SK_Dim_Product INT NOT NULL  IDENTITY  PRIMARY KEY,
+    SK_Dim_Product INT NOT NULL PRIMARY KEY,
     Product_Name nvarchar(50) NOT NULL,
     Product_Type nvarchar(50) NOT NULL
 );
@@ -68,9 +68,9 @@ CREATE TABLE BI_DW.Fact_Requests (
     FK_Client_Id INT,
     FK_Product_Id INT,
     Qualification INT,
-    Question nvarchar(255) NOT NULL,
-    Question_Type nvarchar(50) NOT NULL,
-    Response nvarchar(50) NOT NULL,
+    Question nvarchar(255),
+    Question_Type nvarchar(50),
+    Response nvarchar(50),
     
    	CONSTRAINT CHK_Question_Type CHECK (Question_Type IN ('knowledge','Failure')), --We define 0 for knowledge or 1 for a failure
    	CONSTRAINT CHK_Qualification CHECK (Qualification IN (0,1,2,3,4,5)),
