@@ -17,10 +17,13 @@ CREATE TABLE BI_DW.Dim_Status (
 );
 
 CREATE TABLE BI_DW.Dim_Location (
-    SK_Dim_Location INT NOT NULL PRIMARY KEY,
+    SK_Dim_Location INT NOT NULL IDENTITY PRIMARY KEY,
     Country_Name nvarchar(255) NOT NULL,
     State_Name nvarchar(255) NOT NULL,
-    City_Name nvarchar(255) NOT NULL
+    City_Name nvarchar(255) NOT NULL,
+    FK_Country INT,
+    FK_State INT,
+    FK_City INT
 );
 
 CREATE TABLE BI_DW.Dim_Employee (
