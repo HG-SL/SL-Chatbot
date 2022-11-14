@@ -103,3 +103,102 @@ INSERT INTO BI.Department(
 	Department_Name
 	)
 	VALUES ('Marketing');
+
+--EMPLOYEE
+INSERT INTO BI.Employee(
+	Employee_Name,
+	Employee_Last_Name,
+	Employee_User_Id,
+	FK_Deparment_Id
+	)
+	VALUES (
+	'Angel',
+	'Gomez',
+	'angelgomezslog',
+	1
+	);
+
+INSERT INTO BI.Employee(
+	Employee_Name,
+	Employee_Last_Name,
+	Employee_User_Id,
+	FK_Deparment_Id
+	)
+	VALUES (
+	'Josue',
+	'Sanchez',
+	'josueslog',
+	1
+	);
+
+INSERT INTO BI.Employee(
+	Employee_Name,
+	Employee_Last_Name,
+	Employee_User_Id,
+	FK_Deparment_Id
+	)
+	VALUES (
+	'Maria',
+	'Garcia',
+	'mgarciaslog',
+	2
+	);
+
+INSERT INTO BI.Employee(
+	Employee_Name,
+	Employee_Last_Name,
+	Employee_User_Id,
+	FK_Deparment_Id
+	)
+	VALUES (
+	'Robert',
+	'Fraze',
+	'robertlog',
+	3
+	);
+
+--ORGANIZATION
+INSERT INTO BI.Organization(
+	Organization_Name,
+	Organization_Type
+	)
+	VALUES (
+	'SVO',
+	'Corporate'
+	);
+
+INSERT INTO BI.Organization(
+	Organization_Name,
+	Organization_Type
+	)
+	VALUES (
+	'APS',
+	'Agency'
+	);
+
+INSERT INTO BI.Organization(
+	Organization_Name,
+	Organization_Type
+	)
+	VALUES (
+	'ESH',
+	'Association'
+	);
+
+INSERT INTO BI.Organization(
+	Organization_Name,
+	Organization_Type
+	)
+	VALUES (
+	'RCP',
+	'Agency'
+	);
+
+INSERT INTO BI.Organization(
+	Organization_Name,
+	Organization_Type
+	)
+	VALUES (
+	'PEPSI',
+	'AMC'
+	);
