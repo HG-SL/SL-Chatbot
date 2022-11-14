@@ -202,3 +202,59 @@ INSERT INTO BI.Organization(
 	'PEPSI',
 	'AMC'
 	);
+
+--PRODUCT TYPE
+INSERT INTO BI.Podruct_Type(
+	Type_Name,
+	Description
+	)
+	VALUES (
+	'Scanning',
+	'This is for scanning QR codes so we can handle users entry to events'
+	);
+
+INSERT INTO BI.Podruct_Type(
+	Type_Name,
+	Description
+	)
+	VALUES (
+	'Virtual',
+	'It is very useful for events for displaying events through streaming'
+	);
+
+INSERT INTO BI.Podruct_Type(
+	Type_Name,
+	Description
+	)
+	VALUES (
+	'Virtual',
+	'It is very useful for events for displaying events through streaming'
+	);
+
+--PRODUCT
+INSERT INTO BI.Product(
+	Product_Name,
+	FK_Product_Type_Id
+	)
+	VALUES (
+	'Scanlogic',
+	1
+	);
+
+INSERT INTO BI.Product(
+	Product_Name,
+	FK_Product_Type_Id
+	)
+	VALUES (
+	'Participantlogic',
+	3
+	);
+
+INSERT INTO BI.Product(
+	Product_Name,
+	FK_Product_Type_Id
+	)
+	VALUES (
+	'Virtualogic',
+	2
+	);
