@@ -258,3 +258,80 @@ INSERT INTO BI.Product(
 	'Virtualogic',
 	2
 	);
+
+--CLIENT
+INSERT INTO BI.Client(
+	Client_Name,
+	Client_Last_Name,
+	Client_Telephone,
+	Client_Email,
+	User_Agent,
+	FK_Organization_Id,
+	FK_City_Id
+	)
+	VALUES (
+	'Lucinda',
+	'Lopez',
+	'0223133',
+	'luci@gmail.com',
+	'Google Chrome',
+	2,
+	3
+	);
+
+INSERT INTO BI.Client(
+	Client_Name,
+	Client_Last_Name,
+	Client_Telephone,
+	Client_Email,
+	User_Agent,
+	FK_Organization_Id,
+	FK_City_Id
+	)
+	VALUES (
+	'Ronaldo',
+	'Cortez',
+	'0145733',
+	'ronl_12@outlook.com',
+	'Motzilla',
+	4,
+	1
+	);
+
+INSERT INTO BI.Client(
+	Client_Name,
+	Client_Last_Name,
+	Client_Telephone,
+	Client_Email,
+	User_Agent,
+	FK_Organization_Id,
+	FK_City_Id
+	)
+	VALUES (
+	'Ruth',
+	NULL,
+	'03216981',
+	'rock@gmail.com',
+	'Motzilla',
+	4,
+	2
+	);
+
+INSERT INTO BI.Client(
+	Client_Name,
+	Client_Last_Name,
+	Client_Telephone,
+	Client_Email,
+	User_Agent,
+	FK_Organization_Id,
+	FK_City_Id
+	)
+	VALUES (
+	'Fernando',
+	'Torres',
+	'23329211',
+	'fer22@svo.com',
+	'Safari',
+	1,
+	1
+	);

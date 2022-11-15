@@ -63,6 +63,8 @@ CREATE TABLE BI_DW.Dim_Product (
 
 CREATE TABLE BI_DW.Fact_Requests (
 	FK_Time_Id INT, 
+	FK_Question_Time INT,
+	FK_Response_Time INT,  
     FK_Status_Id INT,
     FK_Location_Id INT,
     FK_Employee_Id INT,
@@ -78,7 +80,10 @@ CREATE TABLE BI_DW.Fact_Requests (
    	CONSTRAINT CHK_Question_Type CHECK (Question_Type IN ('knowledge','Failure')), --We define 0 for knowledge or 1 for a failure
    	CONSTRAINT CHK_Qualification CHECK (Qualification IN (0,1,2,3,4,5)),
    	
-	CONSTRAINT FK_Time FOREIGN KEY (FK_Time_Id)
+	CONSTRAINT FK_Question_Time FOREIGN KEY (FK_Question_Time)
+    REFERENCES BI_DW.Dim_Time(Sk_Dim_Time),
+
+    CONSTRAINT FK_Response_Time FOREIGN KEY (FK_Response_Time)
     REFERENCES BI_DW.Dim_Time(Sk_Dim_Time),
 
     CONSTRAINT FK_Status FOREIGN KEY (FK_Status_Id)
