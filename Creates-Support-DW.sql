@@ -1,13 +1,17 @@
 CREATE SCHEMA BI_DW;
 
 CREATE TABLE BI_DW.Dim_Time(
-    Sk_Dim_Time INT NOT NULL  PRIMARY KEY,
+    Sk_Dim_Time INT NOT NULL PRIMARY KEY,
+    Full_Date Date NOT NULL,
     Year_Name nvarchar(25) NOT NULL,
     Month_Name nvarchar(25) NOT NULL,
-    Day_Name nvarchar(25) NOT NULL,
-    Full_Date smalldatetime NOT NULL,
-    Full_Hour nvarchar(50) NOT NULL,
-    Flag_Weekend BIT
+    Day_Of_Month nvarchar(25) NOT NULL,
+    Day_Of_Year nvarchar(25) NOT NULL,
+    Week_Of_Year nvarchar(25) NOT NULL,
+    Day_Of_Week nvarchar(25) NOT NULL,
+    Trimester_Number nvarchar(25) NOT NULL
+    --Full_Hour nvarchar(50) NOT NULL,
+    --Flag_Weekend BIT
 );
 
 CREATE TABLE BI_DW.Dim_Status (
@@ -61,9 +65,13 @@ CREATE TABLE BI_DW.Dim_Product (
     Product_Type nvarchar(50) NOT NULL
 );
 
-CREATE TABLE BI_DW.Fact_Requests (
-	FK_Time_Id INT, 
-	FK_Question_Time INT,
+CREATE TABLE BI_DW.Fact_Requests ( 
+    Qualification INT,
+    Question nvarchar(500),
+    Question_Type nvarchar(50),
+    Response nvarchar(500),
+    --Posibly add quantity attribute
+    FK_Question_Time INT,
 	FK_Response_Time INT,  
     FK_Status_Id INT,
     FK_Location_Id INT,
@@ -72,10 +80,6 @@ CREATE TABLE BI_DW.Fact_Requests (
     FK_Organization_Id INT,
     FK_Client_Id INT,
     FK_Product_Id INT,
-    Qualification INT,
-    Question nvarchar(255),
-    Question_Type nvarchar(50),
-    Response nvarchar(50),
     
    	CONSTRAINT CHK_Question_Type CHECK (Question_Type IN ('knowledge','Failure')), --We define 0 for knowledge or 1 for a failure
    	CONSTRAINT CHK_Qualification CHECK (Qualification IN (0,1,2,3,4,5)),

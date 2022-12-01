@@ -141,7 +141,7 @@ INSERT INTO BI.Employee(
 	'Maria',
 	'Garcia',
 	'mgarciaslog',
-	2
+	5
 	);
 
 INSERT INTO BI.Employee(
@@ -204,7 +204,7 @@ INSERT INTO BI.Organization(
 	);
 
 --PRODUCT TYPE
-INSERT INTO BI.Podruct_Type(
+INSERT INTO BI.Product_Type(
 	Type_Name,
 	Description
 	)
@@ -213,7 +213,7 @@ INSERT INTO BI.Podruct_Type(
 	'This is for scanning QR codes so we can handle users entry to events'
 	);
 
-INSERT INTO BI.Podruct_Type(
+INSERT INTO BI.Product_Type(
 	Type_Name,
 	Description
 	)
@@ -222,7 +222,7 @@ INSERT INTO BI.Podruct_Type(
 	'It is very useful for events for displaying events through streaming'
 	);
 
-INSERT INTO BI.Podruct_Type(
+INSERT INTO BI.Product_Type(
 	Type_Name,
 	Description
 	)
@@ -333,5 +333,71 @@ INSERT INTO BI.Client(
 	'fer22@svo.com',
 	'Safari',
 	1,
+	1
+	);
+
+--QUESTION
+INSERT INTO BI.Question(
+	Description,
+	Priority,
+	Question_Date,
+	Question_Type,
+	FK_Status_Id,
+	FK_Client_Id
+	)
+	VALUES (
+	'How can I delete an abstract?',
+	'Medium',
+	'2022-11-01',
+	'knowledge',
+	2,
+	1
+	);
+
+INSERT INTO BI.Question(
+	Description,
+	Priority,
+	Question_Date,
+	Question_Type,
+	FK_Status_Id,
+	FK_Client_Id
+	)
+	VALUES (
+	'Import participants is not working',
+	'High',
+	'2022-10-25',
+	'failure',
+	2,
+	3
+	);
+
+--ANSWER
+INSERT INTO BI.Answer(
+	Result,
+	Qualification,
+	Answer_Date,
+	FK_Question_Id,
+	FK_Employee_Id
+	)
+	VALUES (
+	'Click on the abstract id and then on the trash icon',
+	3,
+	'2022-10-26',
+	1,
+	1
+	);
+
+	INSERT INTO BI.Answer(
+	Result,
+	Qualification,
+	Answer_Date,
+	FK_Question_Id,
+	FK_Employee_Id
+	)
+	VALUES (
+	'Go to the participant view at the bottom is the import refresh',
+	0,
+	'2022-10-26 00:26',
+	4,
 	1
 	);

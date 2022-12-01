@@ -58,12 +58,15 @@ CREATE TABLE BI.Status (
 
 CREATE TABLE BI.Question (
     Question_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
-    Description nvarchar(255) NOT NULL,
-    Priority nvarchar(50) NOT NULL, --Should be a check like (High, Medium, Low,...)
+    Description nvarchar(500) NOT NULL,
+    Priority nvarchar(50) , --Should be a check like (High, Medium, Low,...)
     Question_Date smalldatetime NOT NULL,
     Question_Type nvarchar(50) NOT NULL,
     FK_Status_Id INT, 
     FK_Client_Id INT,
+    FK_Product_Id INT,
+    CONSTRAINT FK_Product FOREIGN KEY (FK_Product_Id)
+    REFERENCES BI.Product(Product_Id),
     CONSTRAINT CHK_Question CHECK (Priority IN ('Urgent','High', 'Medium', 'Low')),
     CONSTRAINT CHK_Question_Type CHECK (Question_Type IN ('knowledge','Failure')), --We define 0 for knowledge or 1 for a failure
     CONSTRAINT FK_Status FOREIGN KEY (FK_Status_Id)
@@ -74,7 +77,7 @@ CREATE TABLE BI.Question (
     ON UPDATE CASCADE
 );
 
-CREATE TABLE BI.Podruct_Type (
+CREATE TABLE BI.Product_Type (
     Product_Type_Id INT NOT NULL IDENTITY  PRIMARY KEY,
     Type_Name nvarchar(50) NOT NULL, --Should be a check like (Virtual platform, Scanning platfomr, Printing solution, ...)
     Description nvarchar(255) 
@@ -85,22 +88,22 @@ CREATE TABLE BI.Product (
     Product_Name nvarchar(50) NOT NULL,
     FK_Product_Type_Id INT,
     CONSTRAINT FK_Product_Type FOREIGN KEY (FK_Product_Type_Id)
-    REFERENCES BI.Podruct_Type(Product_Type_Id)
+    REFERENCES BI.Product_Type(Product_Type_Id)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
-CREATE TABLE BI.Product_Question (
-    Product_Question_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
-    FK_Product_Id INT,
-    FK_Question_Id INT,
-    CONSTRAINT FK_Product FOREIGN KEY (FK_Product_Id)
-    REFERENCES BI.Product(Product_Id),
-    CONSTRAINT FK_Question FOREIGN KEY (FK_Question_Id)
-    REFERENCES BI.Question(Question_Id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
-);
+-- CREATE TABLE BI.Product_Question (
+--     Product_Question_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
+--     FK_Product_Id INT,
+--     FK_Question_Id INT,
+--     CONSTRAINT FK_Product FOREIGN KEY (FK_Product_Id)
+--     REFERENCES BI.Product(Product_Id),
+--     CONSTRAINT FK_Question FOREIGN KEY (FK_Question_Id)
+--     REFERENCES BI.Question(Question_Id)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE
+-- );
 
 CREATE TABLE BI.Department (
     Department_Id INT NOT NULL IDENTITY  PRIMARY KEY,
@@ -122,7 +125,7 @@ CREATE TABLE BI.Employee (
 
 CREATE TABLE BI.Answer (
     Answer_Id  INT NOT NULL  IDENTITY  PRIMARY KEY,
-    Result nvarchar(255) NOT NULL,
+    Result nvarchar(500) NOT NULL,
     Qualification INT, --Should be a check like (High, Medium, Low,...)
     Answer_Date smalldatetime NOT NULL,
     FK_Question_Id INT, 
