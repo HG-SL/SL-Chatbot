@@ -53,7 +53,7 @@ CREATE TABLE BI_DW.Dim_Organization (
 CREATE TABLE BI_DW.Dim_Client (
     SK_Dim_Client INT NOT NULL PRIMARY KEY,
 	Client_Name nvarchar(50),
-    Client_Last_Name nvarchar(50), 
+    Client_Family_Name nvarchar(50), 
     Client_Telephone nvarchar(255), 
     Client_Email nvarchar(255) NOT NULL,
     User_Agent nvarchar(255)

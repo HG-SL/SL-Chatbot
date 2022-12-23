@@ -29,14 +29,15 @@ CREATE TABLE BI.City (
 CREATE TABLE BI.Organization (
     Organization_Id  INT NOT NULL  IDENTITY  PRIMARY KEY,
 	Organization_Name nvarchar(200) NOT NULL UNIQUE,
-    Organization_Type nvarchar(100) NOT NULL, 
+    Organization_Type nvarchar(100), 
+    Organization_Acronym nvarchar(50),
     CONSTRAINT CHK_Organization_Type CHECK (Organization_Type IN ('Corporate', 'Association', 'Non-profit', 'Agency', 'PCO', 'AMC'))
 );
 
 CREATE TABLE BI.Client (
     Client_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
 	Client_Name nvarchar(50),
-    Client_Last_Name nvarchar(50), 
+    Client_Family_Name nvarchar(50), 
     Client_Telephone nvarchar(255), 
     Client_Email nvarchar(255) NOT NULL,
     User_Agent nvarchar(255),
@@ -59,7 +60,7 @@ CREATE TABLE BI.Status (
 CREATE TABLE BI.Question (
     Question_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
     Description nvarchar(500) NOT NULL,
-    Priority nvarchar(50) , --Should be a check like (High, Medium, Low,...)
+    --Priority nvarchar(50) , 
     Question_Date smalldatetime NOT NULL,
     Question_Type nvarchar(50) NOT NULL,
     FK_Status_Id INT, 
@@ -67,7 +68,7 @@ CREATE TABLE BI.Question (
     FK_Product_Id INT,
     CONSTRAINT FK_Product FOREIGN KEY (FK_Product_Id)
     REFERENCES BI.Product(Product_Id),
-    CONSTRAINT CHK_Question CHECK (Priority IN ('Urgent','High', 'Medium', 'Low')),
+    --CONSTRAINT CHK_Question CHECK (Priority IN ('Urgent','High', 'Medium', 'Low')),
     CONSTRAINT CHK_Question_Type CHECK (Question_Type IN ('knowledge','Failure')), --We define 0 for knowledge or 1 for a failure
     CONSTRAINT FK_Status FOREIGN KEY (FK_Status_Id)
     REFERENCES BI.Status(Status_Id),

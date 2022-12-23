@@ -339,7 +339,6 @@ INSERT INTO BI.Client(
 --QUESTION
 INSERT INTO BI.Question(
 	Description,
-	Priority,
 	Question_Date,
 	Question_Type,
 	FK_Status_Id,
@@ -347,7 +346,6 @@ INSERT INTO BI.Question(
 	)
 	VALUES (
 	'How can I delete an abstract?',
-	'Medium',
 	'2022-11-01',
 	'knowledge',
 	2,
@@ -356,7 +354,6 @@ INSERT INTO BI.Question(
 
 INSERT INTO BI.Question(
 	Description,
-	Priority,
 	Question_Date,
 	Question_Type,
 	FK_Status_Id,
@@ -364,7 +361,6 @@ INSERT INTO BI.Question(
 	)
 	VALUES (
 	'Import participants is not working',
-	'High',
 	'2022-10-25',
 	'failure',
 	2,
