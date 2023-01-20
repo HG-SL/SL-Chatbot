@@ -14,8 +14,8 @@ export class PagesComponent implements OnInit {
       date: new Date(),
       reply: false,
       user: {
-        name: 'Angie Harms',
-        avatar: 'https://shocklogic.zendesk.com/system/photos/360301406138/AH_Angie_Harms.png',
+        name: 'SL chatbot',
+        avatar: 'https://theme.zdassets.com/theme_assets/1299963/42d732715e6bb358b56da2f15f476f6811138b40.png',
       },
     },
     {
@@ -24,8 +24,8 @@ export class PagesComponent implements OnInit {
       reply: false,
       date: '',
       user: {
-        name: 'Angie Harms',
-        avatar: 'https://shocklogic.zendesk.com/system/photos/360301406138/AH_Angie_Harms.png',
+        name: 'SL chatbot',
+        avatar: 'https://theme.zdassets.com/theme_assets/1299963/42d732715e6bb358b56da2f15f476f6811138b40.png',
       },
     },
   ];
