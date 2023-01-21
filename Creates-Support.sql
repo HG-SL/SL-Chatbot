@@ -87,6 +87,7 @@ CREATE TABLE BI.Product_Type (
 CREATE TABLE BI.Product (
     Product_Id INT NOT NULL  IDENTITY  PRIMARY KEY,
     Product_Name nvarchar(50) NOT NULL,
+    Section_Id nvarchar(100),
     FK_Product_Type_Id INT,
     CONSTRAINT FK_Product_Type FOREIGN KEY (FK_Product_Type_Id)
     REFERENCES BI.Product_Type(Product_Type_Id)

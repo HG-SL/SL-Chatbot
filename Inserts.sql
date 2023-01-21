@@ -243,19 +243,23 @@ INSERT INTO BI.Product(
 
 INSERT INTO BI.Product(
 	Product_Name,
+	Section_Id,
 	FK_Product_Type_Id
 	)
 	VALUES (
 	'Participantlogic',
+	'115000967525-Participantlogic',
 	3
 	);
 
 INSERT INTO BI.Product(
 	Product_Name,
+	Section_Id,
 	FK_Product_Type_Id
 	)
 	VALUES (
 	'Virtualogic',
+	'360003958677-Virtual-Events',
 	2
 	);
 
