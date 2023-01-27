@@ -5,7 +5,7 @@ $shocklogic-orange: #FF6E0B;
   display: flex;
 }
 nb-chat {
-  width: 300px;
+  width: 350px;
   height: 400px;
 }
 
@@ -17,4 +17,8 @@ button{
 
 .mt-10{
   margin-top: 10px;
+}
+
+mat-chip{
+  cursor: pointer;
 }
