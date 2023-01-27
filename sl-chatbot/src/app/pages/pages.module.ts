@@ -4,24 +4,19 @@ import { SharedModule } from '../shared/shared.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { PagesComponent } from './pages.component';
 import { BotComponent } from './bot/bot.component';
-import { NbChatModule } from '@nebular/theme';
+import { NbChatModule, NbSpinnerModule } from '@nebular/theme';
 
 @NgModule({
   declarations: [
     PagesComponent, 
     BotComponent
   ],
-  providers: [
-    
-  ],
-  entryComponents: [
-    
-  ],
   imports: [
     CommonModule,
     PagesRoutingModule,
     SharedModule,
-    NbChatModule
+    NbChatModule,
+    NbSpinnerModule
   ]
 })
 export class PagesModule { }
