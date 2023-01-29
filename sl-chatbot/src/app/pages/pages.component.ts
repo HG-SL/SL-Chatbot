@@ -120,7 +120,6 @@ export class PagesComponent implements OnInit {
     this.product = product
     this.buildMessage(product.Product_Name,true)
     this.buildMessage("Ok. Please describe what you need help with.",false)
-    this.emailFlag = true
   }
   
   getLicense(){
