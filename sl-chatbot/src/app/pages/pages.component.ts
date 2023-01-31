@@ -100,6 +100,89 @@ export class PagesComponent implements OnInit {
         this.buildMessage('Please introduce a valid email')
       }
     }
+    else{
+      this.body = {
+        Client: {
+            Client_Email: this.clientEmail,
+            User_Agent: window.navigator.userAgent
+        },
+        Organization: {},
+        Product: {
+          Product_Id: this.product.Product_Id,
+          Product_Name: this.product.Product_Name,
+          Section_Id: this.product.Section_Id
+        },
+        Country: {
+          Country_Name: this.location.country
+        },
+        State: {
+          State_Name: this.location.regionName
+        },
+        City: {
+          City_Name: this.location.city
+        },
+        Question: {
+          Description: event.message,
+          Question_Date: this.getTimeFormat(),
+          Question_Type: "Failure"
+        }
+      }
+      this.questionService.savequestion(this.body, "support")
+      .subscribe(
+        res => {
+          console.log(res)
+        },
+        err => {
+          console.log(err)
+        }
+      )
+    }
+  }
+
+  getTimeFormat(){
+    let d = new Date();
+
+    let year;
+    let month;
+    let day;
+    let hour;
+    let minutes;
+    let seconds;
+
+    year = d.getFullYear();
+
+    let months = ["01","02","03","04","05","06","07","08","09","10","11","12"];
+
+    month = months[d.getMonth()];
+
+    if(d.getDate() <= 9){
+      day = "0"+d.getDate();
+    }
+    else{
+      day = d.getDate();
+    }
+
+    if(d.getHours() <= 9){
+      hour = "0"+d.getHours();
+    }
+    else{
+      hour = d.getHours();
+    }
+
+    if(d.getMinutes() <= 9){
+      minutes = "0"+d.getMinutes();
+    }
+    else{
+      minutes = d.getMinutes();
+    }
+
+    if(d.getSeconds() <= 9){
+      seconds = "0"+d.getSeconds();
+    }
+    else{
+      seconds = d.getSeconds();
+    }
+    return year+"-"+month+"-"+day+" "+hour+":"+minutes+":"+seconds;
   }
 
   getSupport(){
