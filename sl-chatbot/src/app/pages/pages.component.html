@@ -9,6 +9,9 @@
               License
           </button>
         </div>
+        <div *nbCustomMessage="'custom-email-msg'; let data">
+          <p class="text-control button-custom-message-text">{{data}}</p>
+        </div>
         <div *nbCustomMessage="'custom-products-msg'; let data">
           <p class="text-control button-custom-message-text">Please select the product you have any questions about</p>
           <mat-chip-list #chipList>

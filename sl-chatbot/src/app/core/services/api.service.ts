@@ -8,6 +8,7 @@ import {environment} from '../../../environments/environment';
 export class ApiService {
 
   API_URL = environment.apiUrl;
+  LOCATION = environment.locationUrl
 
   httpOptions = {
     headers: new HttpHeaders({

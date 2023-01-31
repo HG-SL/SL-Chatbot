@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 })
 export class QuestionsService extends ApiService{
 
-  savequestion(body: any, questionType:boolean){
+  savequestion(body: any, questionType:string){
     return this.http.post(this.API_URL+'save-question/'+questionType, body, this.httpOptions);
   }
 }
