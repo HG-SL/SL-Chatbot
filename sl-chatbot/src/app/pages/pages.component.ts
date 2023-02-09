@@ -38,7 +38,9 @@ export class PagesComponent implements OnInit {
     this.emailFlag = true
   }
 
-  /* Get IP address and location */
+  /**
+   * [Get IP address and location from user]
+   * */
   getLocation(){
     this.usersService.getUserLocation()
     .subscribe(
@@ -51,6 +53,13 @@ export class PagesComponent implements OnInit {
     )
   }
 
+  /**
+   * [Show chatbot's response to user]
+   * @param {[string]} text [Message's content]
+   * @param {[boolean]} reply [Defines if the message is a reply of another]
+   * @param {[string]} type [Message's type]
+   * @param {[string]} customMessageData [Custom message that can be sent from the bot once a type is assigned]
+   * */
   buildMessage(text:string = '', reply:boolean = false, type:string = '', customMessageData:string = ''){
     if(type != ""){
       this.messages.push({
@@ -76,6 +85,9 @@ export class PagesComponent implements OnInit {
     }
   }
 
+  /**
+   * @deprecated [Checks if an email has regex of an email, we won't ask for email anymore]
+   * */
   checkingInputEmail(email:string){
     if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/igm.test(email)){
       return true;
@@ -89,6 +101,10 @@ export class PagesComponent implements OnInit {
 
   }
 
+  /**
+   * [Event of user sending a message to the chatbot. It will save the question the user makes to the database]
+   * @param {[any]} event [Message's event]
+   * */
   sendMessage(event:any) {
     this.buildMessage(event.message,true)
     if(this.emailFlag){
@@ -140,6 +156,9 @@ export class PagesComponent implements OnInit {
     }
   }
 
+  /**
+   * [Format Date to string]
+   * */
   getTimeFormat(){
     let d = new Date();
 
@@ -186,6 +205,9 @@ export class PagesComponent implements OnInit {
     return year+"-"+month+"-"+day+" "+hour+":"+minutes+":"+seconds;
   }
 
+  /**
+   * [Get the list of Shocklogic products available for support so the user can select the one they need help with]
+   * */
   getSupport(){
     this.buildMessage('Support',true)
     this.productsService.getProducts()
@@ -200,6 +222,10 @@ export class PagesComponent implements OnInit {
     )
   }
 
+  /**
+   * [Prompts the user for a question about the product they selected]
+   * @param {[any]} product [Selected product]
+   * */
   selectProduct(product:any){
     this.product = product
     this.buildMessage(product.Product_Name,true)

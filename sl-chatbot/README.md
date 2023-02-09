@@ -35,6 +35,7 @@ Chatbot intended for technical support for Shocklogic products
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#todo">TODO</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
@@ -115,6 +116,12 @@ See the [open issues](https://github.com/HG-SL/SL-Chatbot/issues) for a full lis
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+<!-- TODO -->
+## TODO
+
+- [ ] After a question is answered, the user should be able to vote if the response was helpful or not
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- CONTACT -->
 ## Contact
