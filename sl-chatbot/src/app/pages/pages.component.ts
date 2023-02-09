@@ -38,10 +38,11 @@ export class PagesComponent implements OnInit {
     this.emailFlag = true
   }
 
+  /* Get IP address and location */
   getLocation(){
     this.usersService.getUserLocation()
     .subscribe(
-      res => { 
+      res => {
         this.location = res
       },
       err => {
@@ -85,7 +86,7 @@ export class PagesComponent implements OnInit {
   }
 
   chatbotResponse(body:any){
-    
+
   }
 
   sendMessage(event:any) {
@@ -204,8 +205,8 @@ export class PagesComponent implements OnInit {
     this.buildMessage(product.Product_Name,true)
     this.buildMessage("Ok. Please describe what you need help with.",false)
   }
-  
+
   getLicense(){
-    
+
   }
 }
