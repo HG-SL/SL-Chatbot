@@ -108,6 +108,7 @@ export class PagesComponent implements OnInit {
           if(this.serviceType == 'support')this.getProducts()
           this.userIdFlag = false
         }
+        else this.buildMessage('Introduce a valid user id')
       },
       err => {
         console.log(err)
