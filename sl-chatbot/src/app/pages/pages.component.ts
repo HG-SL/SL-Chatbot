@@ -13,10 +13,11 @@ export class PagesComponent implements OnInit {
   products:any = []
   product:any = {}
   location:any = {}
-  clientEmail:string = '';
+  userId:string = '';
   body:any = {}
   removable = true;
-  emailFlag:boolean = false;
+  userIdFlag:boolean = false;
+  serviceType:string = ''
   // messages: any[];
   chats: any[] = [{
     status: 'primary',
@@ -34,8 +35,8 @@ export class PagesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLocation()
-    this.buildMessage('Hello how can I help you?',false,'custom-email-msg',"For a more personalized experience, please introduce your email")
-    this.emailFlag = true
+    this.buildMessage('Hello how can I help you?',false, 'button','Support')
+    this.userIdFlag = true
   }
 
   /**
@@ -97,6 +98,23 @@ export class PagesComponent implements OnInit {
     }
   }
 
+  validateUserId(userId:string){
+    this.usersService.validateUserId(userId)
+    .subscribe(
+      res => {
+        let auxRes:any = res
+        if(auxRes.result != 'error'){
+          this.userId = userId
+          if(this.serviceType == 'support')this.getProducts()
+          this.userIdFlag = false
+        }
+      },
+      err => {
+        console.log(err)
+      }
+    )
+  }
+
   chatbotResponse(body:any){
 
   }
@@ -107,21 +125,14 @@ export class PagesComponent implements OnInit {
    * */
   sendMessage(event:any) {
     this.buildMessage(event.message,true)
-    if(this.emailFlag){
-      if(this.checkingInputEmail(event.message)){
-        this.clientEmail = event.message
-        this.buildMessage('',false,'button','Support')
-        this.emailFlag = false
-      }
-      else{
-        this.buildMessage('Please introduce a valid email')
-      }
+    if(this.userIdFlag){
+      this.validateUserId(event.message)
     }
-    else{
+    else if(!this.userIdFlag && this.userId != ''){
       this.body = {
         Client: {
-            Client_Email: this.clientEmail,
-            User_Agent: window.navigator.userAgent
+          User_Id: this.userId,
+          User_Agent: window.navigator.userAgent
         },
         Organization: {},
         Product: {
@@ -205,11 +216,16 @@ export class PagesComponent implements OnInit {
     return year+"-"+month+"-"+day+" "+hour+":"+minutes+":"+seconds;
   }
 
+  getSupport(){
+    this.serviceType = 'support'
+    this.buildMessage('Support',true)
+    this.buildMessage('',false,'custom-email-msg',"For a more personalized experience, please introduce your user id")
+  }
+
   /**
    * [Get the list of Shocklogic products available for support so the user can select the one they need help with]
    * */
-  getSupport(){
-    this.buildMessage('Support',true)
+  getProducts(){
     this.productsService.getProducts()
     .subscribe(
       res => {
