@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { QuestionsService } from 'src/app/core/services/questions.service'
 import { ProductsService } from 'src/app/core/services/products.service'
 import { UsersService } from 'src/app/core/services/users.service'
+import { NluService } from 'src/app/core/services/responses/nlu.service'
 
 @Component({
   selector: 'app-pages',
@@ -24,11 +25,13 @@ export class PagesComponent implements OnInit {
     title: 'Shocklogic',
   }]
 
+  currentMessage: string = "";
   messages: any[] = []
 
   constructor(
     private questionService: QuestionsService,
     private productsService: ProductsService,
+    private nluService: NluService,
     private usersService: UsersService
     ) {
   }
@@ -86,18 +89,6 @@ export class PagesComponent implements OnInit {
     }
   }
 
-  /**
-   * @deprecated [Checks if an email has regex of an email, we won't ask for email anymore]
-   * */
-  checkingInputEmail(email:string){
-    if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/igm.test(email)){
-      return true;
-    }
-    else{
-      return false;
-    }
-  }
-
   validateUserId(userId:string){
     this.usersService.validateUserId(userId)
     .subscribe(
@@ -121,7 +112,8 @@ export class PagesComponent implements OnInit {
   }
 
   /**
-   * [Event of user sending a message to the chatbot. It will save the question the user makes to the database]
+   * [Event of user sending a message to the chatbot. It will save the question the user makes to the database,
+   * if the bot is asking for the user's ID, it will validate that ID first]
    * @param {[any]} event [Message's event]
    * */
   sendMessage(event:any) {
@@ -160,6 +152,12 @@ export class PagesComponent implements OnInit {
       .subscribe(
         res => {
           console.log(res)
+          /* After saving the question we are going to give answer to that question */
+          // @ts-ignore
+          this.nluService.processUserInput(this.product.Product_Name, event.message).subscribe(({answer}) => {
+            this.currentMessage = answer;
+            this.buildMessage(this.currentMessage,false)
+          })
         },
         err => {
           console.log(err)
