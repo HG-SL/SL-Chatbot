@@ -1,5 +1,6 @@
 <div>
     <nb-chat *ngFor="let chat of chats"  [title]="chat.title" [status]="chat.status">
+    <!-- Type of service selector -->
         <div *nbCustomMessage="'button'; let buttonText">
           <p class="text-control button-custom-message-text">Please select the service you required</p>
           <button mat-button nbButton status="control" (click)="getSupport()">
@@ -9,9 +10,12 @@
               License
           </button>
         </div>
+
+    <!-- User ID form-->
         <div *nbCustomMessage="'custom-email-msg'; let data">
           <p class="text-control button-custom-message-text">{{data}}</p>
         </div>
+    <!-- Product selector-->
         <div *nbCustomMessage="'custom-products-msg'; let data">
           <p class="text-control button-custom-message-text">Please select the product you have any questions about</p>
           <mat-chip-list #chipList>
@@ -20,16 +24,17 @@
             </mat-chip>
           </mat-chip-list>
         </div>
-        <nb-chat-message *ngFor="let msg of messages"
-          [type]="zendeskMessage == false ? msg.type : 'link'"
-          [message]="msg.text"
-          [reply]="msg.reply"
-          [sender]="msg.user.name"
-          [date]="msg.date"
-          [avatar]="msg.user.avatar"
-          [customMessageData]="zendeskMessage == false ? msg.customMessageData :
-          {href: 'https://www.google.com', text: currentMessage}">
-        </nb-chat-message>
+
+    <!-- Other messages-->
+    <nb-chat-message *ngFor="let msg of messages"
+                     [type]="msg.type"
+                     [message]="msg.text"
+                     [reply]="msg.reply"
+                     [sender]="msg.user.name"
+                     [date]="msg.date"
+                     [avatar]="msg.user.avatar"
+                     [customMessageData]="msg.customMessageData">
+    </nb-chat-message>
 
         <!-- <nb-chat-message
           *ngIf="loading"

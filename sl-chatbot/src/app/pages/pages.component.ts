@@ -162,7 +162,7 @@ export class PagesComponent implements OnInit {
           // @ts-ignore
           this.nluService.processUserInput(currentQuestion, currentQuestionDate, currentClient, this.product.Product_Name, event.message).subscribe(({answer, zendesk}) => {
             this.currentMessage = answer;
-            this.zendeskMessage = zendesk;
+            this.zendeskMessage = zendesk
             this.buildMessage(this.currentMessage,false)
           })
         },
