@@ -11,8 +11,11 @@ export class NluService extends ApiService {
    * @param {[string]} input [User's input]
    * @return {[Object]} [User's input with POS tagging]
    * */
-  processUserInput(product: string, input: string){
+  processUserInput(questionId: string, questionDate: string, clientId: string, product: string, input: string){
     let body = {
+      Question_Id: questionId,
+      Question_Date: questionDate,
+      Client_Id: clientId,
       product: product,
       input: input
     }

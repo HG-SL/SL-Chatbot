@@ -152,13 +152,14 @@ export class PagesComponent implements OnInit {
           Question_Type: "Failure"
         }
       }
-      this.questionService.savequestion(this.body, "support")
-      .subscribe(
-        res => {
-          console.log(res)
+      // @ts-ignore
+      this.questionService.savequestion(this.body, "support").subscribe(({Question_Id, Question_Date, Client_Id}) => {
+          let currentQuestion = Question_Id
+          let currentQuestionDate = Question_Date
+          let currentClient = Client_Id
           /* After saving the question we are going to give answer to that question */
           // @ts-ignore
-          this.nluService.processUserInput(this.product.Product_Name, event.message).subscribe(({answer}) => {
+          this.nluService.processUserInput(currentQuestion, currentQuestionDate, currentClient, this.product.Product_Name, event.message).subscribe(({answer}) => {
             this.currentMessage = answer;
             this.buildMessage(this.currentMessage,false)
           })
