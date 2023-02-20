@@ -3,6 +3,8 @@ import { QuestionsService } from 'src/app/core/services/questions.service'
 import { ProductsService } from 'src/app/core/services/products.service'
 import { UsersService } from 'src/app/core/services/users.service'
 import { NluService } from 'src/app/core/services/responses/nlu.service'
+import { getTimeFormat } from "../core/utils/date.formatting";
+import { CHATBOT_AVATAR } from "../core/constants/constants"
 
 @Component({
   selector: 'app-pages',
@@ -10,6 +12,7 @@ import { NluService } from 'src/app/core/services/responses/nlu.service'
   styleUrls: ['./pages.component.scss']
 })
 export class PagesComponent implements OnInit {
+  /* Initialize */
   loading = false;
   products:any = []
   product:any = {}
@@ -37,9 +40,9 @@ export class PagesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getLocation()
-    this.buildMessage('Hello how can I help you?',false, 'button','Support')
-    this.userIdFlag = true
+    this.getLocation() // Get IP address
+    this.buildMessage('Hello, how can I help you?',false, 'button','Support') // Greeting
+    this.userIdFlag = true // Since it's the first interaction we need to ask for user's ID
   }
 
   /**
@@ -73,7 +76,7 @@ export class PagesComponent implements OnInit {
         customMessageData: customMessageData,
         reply: reply,
         user: {
-          avatar: 'https://theme.zdassets.com/theme_assets/1299963/42d732715e6bb358b56da2f15f476f6811138b40.png',
+          avatar: CHATBOT_AVATAR,
         },
       });
     }
@@ -83,32 +86,33 @@ export class PagesComponent implements OnInit {
         date: new Date(),
         reply: reply,
         user: {
-          avatar: 'https://theme.zdassets.com/theme_assets/1299963/42d732715e6bb358b56da2f15f476f6811138b40.png',
+          avatar: CHATBOT_AVATAR,
         },
       });
     }
   }
 
+  /**
+   * [Validate that the ID given is an ID that exists in the database]
+   * @param {[string]} userId [User's ID]
+   * */
   validateUserId(userId:string){
     this.usersService.validateUserId(userId)
     .subscribe(
       res => {
         let auxRes:any = res
+        /* If the ID is valid, ask the user which product they need help with */
         if(auxRes.result != 'error'){
           this.userId = userId
           if(this.serviceType == 'support')this.getProducts()
           this.userIdFlag = false
         }
-        else this.buildMessage('Please follow the instructions')
+        else this.buildMessage("Please provide a valid user's ID")
       },
       err => {
         console.log(err)
       }
     )
-  }
-
-  chatbotResponse(body:any){
-
   }
 
   /**
@@ -144,7 +148,7 @@ export class PagesComponent implements OnInit {
         },
         Question: {
           Description: event.message,
-          Question_Date: this.getTimeFormat(),
+          Question_Date: getTimeFormat(),
           Question_Type: "Failure"
         }
       }
@@ -166,54 +170,7 @@ export class PagesComponent implements OnInit {
     }
   }
 
-  /**
-   * [Format Date to string]
-   * */
-  getTimeFormat(){
-    let d = new Date();
 
-    let year;
-    let month;
-    let day;
-    let hour;
-    let minutes;
-    let seconds;
-
-    year = d.getFullYear();
-
-    let months = ["01","02","03","04","05","06","07","08","09","10","11","12"];
-
-    month = months[d.getMonth()];
-
-    if(d.getDate() <= 9){
-      day = "0"+d.getDate();
-    }
-    else{
-      day = d.getDate();
-    }
-
-    if(d.getHours() <= 9){
-      hour = "0"+d.getHours();
-    }
-    else{
-      hour = d.getHours();
-    }
-
-    if(d.getMinutes() <= 9){
-      minutes = "0"+d.getMinutes();
-    }
-    else{
-      minutes = d.getMinutes();
-    }
-
-    if(d.getSeconds() <= 9){
-      seconds = "0"+d.getSeconds();
-    }
-    else{
-      seconds = d.getSeconds();
-    }
-    return year+"-"+month+"-"+day+" "+hour+":"+minutes+":"+seconds;
-  }
 
   getSupport(){
     this.serviceType = 'support'
