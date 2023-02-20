@@ -20,19 +20,20 @@
             </mat-chip>
           </mat-chip-list>
         </div>
-        <nb-chat-message *ngFor="let msg of messages" 
-          [type]="msg.type"
+        <nb-chat-message *ngFor="let msg of messages"
+          [type]="zendeskMessage == false ? msg.type : 'link'"
           [message]="msg.text"
           [reply]="msg.reply"
           [sender]="msg.user.name"
           [date]="msg.date"
           [avatar]="msg.user.avatar"
-          [customMessageData]="msg.customMessageData">
+          [customMessageData]="zendeskMessage == false ? msg.customMessageData :
+          {href: 'https://www.google.com', text: currentMessage}">
         </nb-chat-message>
 
-        <!-- <nb-chat-message 
-          *ngIf="loading" 
-          [nbSpinner]="loading" 
+        <!-- <nb-chat-message
+          *ngIf="loading"
+          [nbSpinner]="loading"
           nbSpinnerStatus="info"
           type="text"
           avatar="../assets/bot.png"

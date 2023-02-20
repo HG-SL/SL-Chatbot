@@ -29,6 +29,7 @@ export class PagesComponent implements OnInit {
   }]
 
   currentMessage: string = "";
+  zendeskMessage: boolean = false;
   messages: any[] = []
 
   constructor(
@@ -159,8 +160,9 @@ export class PagesComponent implements OnInit {
           let currentClient = Client_Id
           /* After saving the question we are going to give answer to that question */
           // @ts-ignore
-          this.nluService.processUserInput(currentQuestion, currentQuestionDate, currentClient, this.product.Product_Name, event.message).subscribe(({answer}) => {
+          this.nluService.processUserInput(currentQuestion, currentQuestionDate, currentClient, this.product.Product_Name, event.message).subscribe(({answer, zendesk}) => {
             this.currentMessage = answer;
+            this.zendeskMessage = zendesk;
             this.buildMessage(this.currentMessage,false)
           })
         },
