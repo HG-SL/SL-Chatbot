@@ -68,7 +68,7 @@ export class PagesComponent implements OnInit {
    * @param {[string]} type [Message's type]
    * @param {[string]} customMessageData [Custom message that can be sent from the bot once a type is assigned]
    * */
-  buildMessage(text:string = '', reply:boolean = false, type:string = '', customMessageData:string = ''){
+  buildMessage(text:string = '', reply:boolean = false, type:string = '', customMessageData:any = ''){
     if(type != ""){
       this.messages.push({
         text: text,
@@ -160,10 +160,11 @@ export class PagesComponent implements OnInit {
           let currentClient = Client_Id
           /* After saving the question we are going to give answer to that question */
           // @ts-ignore
-          this.nluService.processUserInput(currentQuestion, currentQuestionDate, currentClient, this.product.Product_Name, event.message).subscribe(({answer, zendesk}) => {
-            this.currentMessage = answer;
+          this.nluService.processUserInput(currentQuestion, currentQuestionDate, currentClient, this.product.Product_Name, event.message).subscribe(({message, answer_url, zendesk,title}) => {
+            this.currentMessage = message;
             this.zendeskMessage = zendesk
-            this.buildMessage(this.currentMessage,false)
+            if(zendesk)this.buildMessage(this.currentMessage,false, 'link',{href: answer_url, text: title})
+            else this.buildMessage(this.currentMessage,false)
           })
         },
         err => {

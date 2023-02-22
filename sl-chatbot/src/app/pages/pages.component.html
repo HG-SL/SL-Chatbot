@@ -25,6 +25,11 @@
           </mat-chip-list>
         </div>
 
+    <!-- Display links-->    
+        <a *nbCustomMessage="'link'; let data" [href]="data.href" target="_blank">
+          {{ data.text }}
+        </a>
+
     <!-- Other messages-->
     <nb-chat-message *ngFor="let msg of messages"
                      [type]="msg.type"
