@@ -25,10 +25,41 @@
           </mat-chip-list>
         </div>
 
-    <!-- Display links-->    
-        <a *nbCustomMessage="'link'; let data" [href]="data.href" target="_blank">
-          {{ data.text }}
-        </a>
+    <!-- Answer score -->
+    <div *nbCustomMessage="'custom-score-msg'; let buttonText">
+      <p class="text-control button-custom-message-text">It would help us if you could score how helpful was this response to you</p>
+      <button mat-button nbButton status="control" (click)="setAnswerScore(1)">
+        1 (No response)
+      </button>
+      <button mat-button nbButton status="control" (click)="setAnswerScore(2)">
+        2 (Wrong)
+      </button>
+      <button mat-button nbButton status="control" (click)="setAnswerScore(3)">
+        3 (Incomplete)
+      </button>
+      <button mat-button nbButton status="control" (click)="setAnswerScore(4)">
+        4 (Helpful)
+      </button>
+      <button mat-button nbButton status="control" (click)="setAnswerScore(5)">
+        5 (Very helpful)
+      </button>
+    </div>
+
+    <!-- Menu for other responses -->
+    <div *nbCustomMessage="'custom-retry-msg'; let buttonText">
+      <p class="text-control button-custom-message-text">You got any other questions?</p>
+      <button mat-button nbButton status="control" (click)="endSession()">
+        No
+      </button>
+      <button mat-button nbButton status="control" (click)="restartSession()">
+        Yes
+      </button>
+    </div>
+
+      <!-- Display links-->
+    <a *nbCustomMessage="'link'; let data" [href]="data.href" target="_blank">
+      {{ data.text }}
+    </a>
 
     <!-- Other messages-->
     <nb-chat-message *ngFor="let msg of messages"

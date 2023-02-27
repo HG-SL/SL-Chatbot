@@ -5,12 +5,15 @@ import { UsersService } from 'src/app/core/services/users.service'
 import { NluService } from 'src/app/core/services/responses/nlu.service'
 import { getTimeFormat } from "../core/utils/date.formatting";
 import { CHATBOT_AVATAR } from "../core/constants/constants"
+import { Answer } from "../core/interfaces/interfaces";
+import { ScoreService } from "../core/services/responses/score.service";
 
 @Component({
   selector: 'app-pages',
   templateUrl: './pages.component.html',
   styleUrls: ['./pages.component.scss']
 })
+
 export class PagesComponent implements OnInit {
   /* Initialize */
   loading = false;
@@ -29,12 +32,17 @@ export class PagesComponent implements OnInit {
   }]
 
   currentMessage: string = "";
+  currentAnswer: Answer = {
+    answer_id: 0,
+    question_id: 0
+  };
   zendeskMessage: boolean = false;
   messages: any[] = []
 
   constructor(
     private questionService: QuestionsService,
     private productsService: ProductsService,
+    private scoreService: ScoreService,
     private nluService: NluService,
     private usersService: UsersService
     ) {
@@ -44,6 +52,7 @@ export class PagesComponent implements OnInit {
     this.getLocation() // Get IP address
     this.buildMessage('Hello, how can I help you?',false, 'button','Support') // Greeting
     this.userIdFlag = true // Since it's the first interaction we need to ask for user's ID
+    // TODO: For first interaction we need localStorage check
   }
 
   /**
@@ -160,11 +169,20 @@ export class PagesComponent implements OnInit {
           let currentClient = Client_Id
           /* After saving the question we are going to give answer to that question */
           // @ts-ignore
-          this.nluService.processUserInput(currentQuestion, currentQuestionDate, currentClient, this.product.Product_Name, event.message).subscribe(({message, answer_url, zendesk,title}) => {
+          this.nluService.processUserInput(currentQuestion, currentQuestionDate, currentClient, this.product.Product_Name, event.message).subscribe(({answer_id, question_id, message, answer_url, zendesk, title}) => {
             this.currentMessage = message;
             this.zendeskMessage = zendesk
+            this.currentAnswer.answer_id = answer_id;
+            this.currentAnswer.question_id = question_id;
+
+            console.log(answer_id, question_id)
+
+            // If the answer comes from a Zendesk article we are building a message of the type link
             if(zendesk)this.buildMessage(this.currentMessage,false, 'link',{href: answer_url, text: title})
             else this.buildMessage(this.currentMessage,false)
+
+            // Ask the user to qualify the quality of the response
+            this.buildMessage('', false, 'custom-score-msg','Support')
           })
         },
         err => {
@@ -210,5 +228,26 @@ export class PagesComponent implements OnInit {
 
   getLicense(){
 
+  }
+
+  setAnswerScore(score:number){
+    // Reply using the score
+    this.buildMessage(score.toString(),true)
+
+    // Set score
+    this.scoreService.qualifyAnswer(this.currentAnswer.question_id, this.currentAnswer.answer_id, score).subscribe((res) => {
+
+      // Ask the user if they have any other questions
+      this.buildMessage('', false, 'custom-retry-msg','Support')
+    })
+  }
+
+  endSession(){
+    this.buildMessage('Have a good day!', false, 'text','Support')
+  }
+
+  restartSession(){
+    this.buildMessage('Hello, how can I help you?',false, 'button','Support') // Greeting
+    this.userIdFlag = false // Since it's the first interaction we need to ask for user's ID
   }
 }
