@@ -236,6 +236,7 @@ export class PagesComponent implements OnInit {
 
     // Set score
     this.scoreService.qualifyAnswer(this.currentAnswer.question_id, this.currentAnswer.answer_id, score).subscribe((res) => {
+      // TODO: In case the score is too low (1/2). Ask the user if they want to open a ticket with Zendesk or schedule a meeting
 
       // Ask the user if they have any other questions
       this.buildMessage('', false, 'custom-retry-msg','Support')
