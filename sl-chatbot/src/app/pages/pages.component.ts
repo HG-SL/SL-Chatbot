@@ -7,6 +7,7 @@ import { getTimeFormat } from "../core/utils/date.formatting";
 import { CHATBOT_AVATAR } from "../core/constants/constants"
 import { Answer } from "../core/interfaces/interfaces";
 import { ScoreService } from "../core/services/responses/score.service";
+import {LocalstorageService} from "../core/services/localstorage.service";
 
 @Component({
   selector: 'app-pages',
@@ -44,15 +45,27 @@ export class PagesComponent implements OnInit {
     private productsService: ProductsService,
     private scoreService: ScoreService,
     private nluService: NluService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private localStorageService: LocalstorageService
     ) {
   }
 
   ngOnInit(): void {
     this.getLocation() // Get IP address
     this.buildMessage('Hello, how can I help you?',false, 'button','Support') // Greeting
-    this.userIdFlag = true // Since it's the first interaction we need to ask for user's ID
-    // TODO: For first interaction we need localStorage check
+
+    let firstInteraction = this.localStorageService.getCurrentItem('userIdFlag');
+
+    if (firstInteraction == null || firstInteraction == "true") {
+      this.userIdFlag = true;
+    }
+    else {
+      this.userIdFlag = false;
+
+      // Get stored userId
+      let uId = this.localStorageService.getCurrentItem('userId')
+      this.userId = uId != null ? uId : '';
+    }
   }
 
   /**
@@ -114,6 +127,7 @@ export class PagesComponent implements OnInit {
         /* If the ID is valid, ask the user which product they need help with */
         if(auxRes.result != 'error'){
           this.userId = userId
+          this.localStorageService.setCurrentItem('userId', userId)
           if(this.serviceType == 'support')this.getProducts()
           this.userIdFlag = false
         }
@@ -197,7 +211,13 @@ export class PagesComponent implements OnInit {
   getSupport(){
     this.serviceType = 'support'
     this.buildMessage('Support',true)
-    this.buildMessage('',false,'custom-email-msg',"For a more personalized experience, please introduce your user id")
+
+    if (!this.userIdFlag){
+      this.getProducts()
+    }
+    else {
+      this.buildMessage('',false,'custom-email-msg',"For a more personalized experience, please introduce your user id")
+    }
   }
 
   /**
@@ -249,6 +269,6 @@ export class PagesComponent implements OnInit {
 
   restartSession(){
     this.buildMessage('Hello, how can I help you?',false, 'button','Support') // Greeting
-    this.userIdFlag = false // Since it's the first interaction we need to ask for user's ID
+    this.localStorageService.setCurrentItem('userIdFlag', false);
   }
 }
