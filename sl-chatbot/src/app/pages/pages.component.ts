@@ -7,7 +7,8 @@ import { getTimeFormat } from "../core/utils/date.formatting";
 import { CHATBOT_AVATAR } from "../core/constants/constants"
 import { Answer } from "../core/interfaces/interfaces";
 import { ScoreService } from "../core/services/responses/score.service";
-import {LocalstorageService} from "../core/services/localstorage.service";
+import { LocalstorageService } from "../core/services/localstorage.service";
+import { TicketsService } from "../core/services/zendesk/tickets.service";
 
 @Component({
   selector: 'app-pages',
@@ -16,29 +17,45 @@ import {LocalstorageService} from "../core/services/localstorage.service";
 })
 
 export class PagesComponent implements OnInit {
-  /* Initialize */
   loading = false;
+
+  // Enable/disable user's input
+  enabled = false;
+
+  // Product view
+  removable = true;
+
+  // Products
   products:any = []
   product:any = {}
+
+  // User data
   location:any = {}
   userId:string = '';
-  body:any = {}
-  removable = true;
   userIdFlag:boolean = false;
+
+  body:any = {}
+
+  // Chatbot's use
   serviceType:string = ''
-  // messages: any[];
+
+  // Chats
   chats: any[] = [{
     status: 'primary',
     title: 'Shocklogic',
   }]
-
   currentMessage: string = "";
+  messages: any[] = []
+
   currentAnswer: Answer = {
     answer_id: 0,
     question_id: 0
   };
+
+  // Zendesk
   zendeskMessage: boolean = false;
-  messages: any[] = []
+  openTickets: any[] = []
+
 
   constructor(
     private questionService: QuestionsService,
@@ -46,7 +63,8 @@ export class PagesComponent implements OnInit {
     private scoreService: ScoreService,
     private nluService: NluService,
     private usersService: UsersService,
-    private localStorageService: LocalstorageService
+    private localStorageService: LocalstorageService,
+    private zendeskService: TicketsService
     ) {
   }
 
@@ -54,6 +72,7 @@ export class PagesComponent implements OnInit {
     this.getLocation() // Get IP address
     this.buildMessage('Hello, how can I help you?',false, 'button','Support') // Greeting
 
+    // Ask for user's ID if it's the first time the user visits the page
     let firstInteraction = this.localStorageService.getCurrentItem('userIdFlag');
 
     if (firstInteraction == null || firstInteraction == "true") {
@@ -124,7 +143,7 @@ export class PagesComponent implements OnInit {
     .subscribe(
       res => {
         let auxRes:any = res
-        /* If the ID is valid, ask the user which product they need help with */
+        // If the ID is valid, ask the user which product they need help with
         if(auxRes.result != 'error'){
           this.userId = userId
           this.localStorageService.setCurrentItem('userId', userId)
@@ -175,6 +194,7 @@ export class PagesComponent implements OnInit {
           Question_Date: getTimeFormat(),
           Question_Type: "Failure"
         }
+
       }
       // @ts-ignore
       this.questionService.savequestion(this.body, "support").subscribe(({Question_Id, Question_Date, Client_Id}) => {
@@ -188,15 +208,16 @@ export class PagesComponent implements OnInit {
             this.zendeskMessage = zendesk
             this.currentAnswer.answer_id = answer_id;
             this.currentAnswer.question_id = question_id;
-
-            console.log(answer_id, question_id)
+            this.enabled = false;
 
             // If the answer comes from a Zendesk article we are building a message of the type link
-            if(zendesk)this.buildMessage(this.currentMessage,false, 'link',{href: answer_url, text: title})
+            if (zendesk) {
+              this.buildMessage(this.currentMessage,false, 'link',{href: answer_url, text: title})
+            }
             else this.buildMessage(this.currentMessage,false)
 
-            // Ask the user to qualify the quality of the response
-            this.buildMessage('', false, 'custom-score-msg','Support')
+            // Ask the user to confirm that he read the response
+            this.buildMessage('', false, 'custom-confirmation-msg','Support')
           })
         },
         err => {
@@ -206,8 +227,16 @@ export class PagesComponent implements OnInit {
     }
   }
 
+  getQualification(){
+    // Reply using the score
+    this.buildMessage("Done",true)
+    this.buildMessage('', false, 'custom-score-msg','Support')
+  }
 
 
+  /**
+   * [Start user's support flow]
+   * */
   getSupport(){
     this.serviceType = 'support'
     this.buildMessage('Support',true)
@@ -217,6 +246,7 @@ export class PagesComponent implements OnInit {
     }
     else {
       this.buildMessage('',false,'custom-email-msg',"For a more personalized experience, please introduce your user id")
+      this.enabled = true;
     }
   }
 
@@ -228,7 +258,8 @@ export class PagesComponent implements OnInit {
     .subscribe(
       res => {
         this.buildMessage('',false,'custom-products-msg','Please select the product you have any questions about')
-        this.products = res
+        this.products = res;
+        this.enabled = false;
       },
       err => {
         console.log(err)
@@ -242,6 +273,7 @@ export class PagesComponent implements OnInit {
    * */
   selectProduct(product:any){
     this.product = product
+    this.enabled = true
     this.buildMessage(product.Product_Name,true)
     this.buildMessage("Ok. Please describe what you need help with.",false)
   }
@@ -250,7 +282,29 @@ export class PagesComponent implements OnInit {
 
   }
 
+  getOpenTickets(){
+    /**
+     * [Get the open tickets from a specified email]
+     * */
+    // @ts-ignore
+    this.zendeskService.getOpenTickets("j.grimshaw@iicom.org").subscribe(({tickets}) => {
+      this.openTickets = tickets.results;
+      console.log(tickets)
+      this.buildMessage('', false, 'custom-ticket-list-view')
+    })
+  }
+
+  // TODO: show response if ticket has response
+  getSpecificTicket(index: number){
+    console.log(index)
+    this.buildMessage('', false, 'custom-specific-ticket-view', {title: this.openTickets[index].subject, date: this.openTickets[index].created_at, description: this.openTickets[index].description, priority: this.openTickets[index].priority})
+  }
+
   setAnswerScore(score:number){
+    /**
+     * [Score the quality of an answer]
+     * @param {[score]} number [Score]
+     * */
     // Reply using the score
     this.buildMessage(score.toString(),true)
 
@@ -264,10 +318,16 @@ export class PagesComponent implements OnInit {
   }
 
   endSession(){
+    /**
+     * [Farewell message to the user]
+     * */
     this.buildMessage('Have a good day!', false, 'text','Support')
   }
 
   restartSession(){
+    /**
+     * [Restart process]
+     * */
     this.buildMessage('Hello, how can I help you?',false, 'button','Support') // Greeting
     this.localStorageService.setCurrentItem('userIdFlag', false);
   }

@@ -23,7 +23,21 @@ mt-5 {
   margin-top: 10px;
 }
 
+.mt-10-n {
+  margin-top: -10px;
+}
+
 mat-chip{
   cursor: pointer;
 }
+
+.text-control-small {
+  font-size: 13px;
+  color: white;
+}
+
+small {
+  font-size: 10px;
+}
+
 

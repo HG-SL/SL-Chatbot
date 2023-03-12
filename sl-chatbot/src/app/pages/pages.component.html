@@ -6,15 +6,42 @@
           <button mat-button nbButton status="control" (click)="getSupport()">
             Support
           </button>
+          <button mat-button nbButton status="control " class="mt-10" (click)="getOpenTickets()">
+            Open tickets
+          </button>
           <button mat-button nbButton status="control " class="mt-10" (click)="getLicense()">
               License
           </button>
         </div>
 
+      <!-- Ticket view -->
+      <div *nbCustomMessage="'custom-ticket-list-view';">
+        <p class="text-control button-custom-message-text">Open tickets, click each ticket to see content</p>
+        <button *ngFor="let ticket of openTickets" mat-button nbButton status="control" (click)="getSpecificTicket(openTickets.indexOf(ticket))">
+          {{ticket.subject}}
+        </button>
+      </div>
+
+      <div *nbCustomMessage="'custom-specific-ticket-view' let data;">
+        <b>{{data.title}}</b>
+        <br>
+        <small>{{data.date}}</small>
+        <p class="text-control-small">
+          {{data.description}}
+        </p>
+
+        <mat-chip-list #chipList>
+          <mat-chip color="primary">
+            {{data.priority}}
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+
     <!-- User ID form-->
         <div *nbCustomMessage="'custom-email-msg'; let data">
           <p class="text-control button-custom-message-text">{{data}}</p>
         </div>
+
     <!-- Product selector-->
         <div *nbCustomMessage="'custom-products-msg'; let data">
           <p class="text-control button-custom-message-text">Please select the product you have any questions about</p>
@@ -24,6 +51,15 @@
             </mat-chip>
           </mat-chip-list>
         </div>
+
+
+    <!-- Answer score -->
+    <div *nbCustomMessage="'custom-confirmation-msg'; let buttonText">
+      <p class="text-control button-custom-message-text">Let us know if you read the reply above</p>
+      <button mat-button nbButton status="control" (click)="getQualification()">
+        Done
+      </button>
+    </div>
 
     <!-- Answer score -->
     <div *nbCustomMessage="'custom-score-msg'; let buttonText">
@@ -81,7 +117,7 @@
           message="...">
         </nb-chat-message> -->
 
-        <nb-chat-form (send)="sendMessage($event)" [dropFiles]="true">
+        <nb-chat-form *ngIf="enabled" (send)="sendMessage($event)" [dropFiles]="true">
         </nb-chat-form>
     </nb-chat>
 </div>
