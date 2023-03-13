@@ -300,6 +300,14 @@ export class PagesComponent implements OnInit {
     this.buildMessage('', false, 'custom-specific-ticket-view', {title: this.openTickets[index].subject, date: this.openTickets[index].created_at, description: this.openTickets[index].description, priority: this.openTickets[index].priority})
   }
 
+  openZendeskTicket(){
+
+  }
+
+  scheduleMeeting(){
+
+  }
+
   setAnswerScore(score:number){
     /**
      * [Score the quality of an answer]
@@ -308,12 +316,18 @@ export class PagesComponent implements OnInit {
     // Reply using the score
     this.buildMessage(score.toString(),true)
 
+    // Ask the user if he wants to open ticket on zendesk or schedule a meeting
+
     // Set score
     this.scoreService.qualifyAnswer(this.currentAnswer.question_id, this.currentAnswer.answer_id, score).subscribe((res) => {
-      // TODO: In case the score is too low (1/2). Ask the user if they want to open a ticket with Zendesk or schedule a meeting
-
-      // Ask the user if they have any other questions
-      this.buildMessage('', false, 'custom-retry-msg','Support')
+      // TODO: Validate security level
+      if (score < 3){
+        this.buildMessage('', false, 'custom-options-msg','Support')
+      }
+      else {
+        // Ask the user if they have any other questions
+        this.buildMessage('', false, 'custom-retry-msg','Support')
+      }
     })
   }
 

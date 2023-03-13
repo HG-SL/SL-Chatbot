@@ -65,19 +65,30 @@
     <div *nbCustomMessage="'custom-score-msg'; let buttonText">
       <p class="text-control button-custom-message-text">It would help us if you could score how helpful was this response to you</p>
       <button mat-button nbButton status="control" (click)="setAnswerScore(1)">
-        1 (No response)
+        No response
       </button>
       <button class="mt-10" mat-button nbButton status="control" (click)="setAnswerScore(2)">
-        2 (Wrong)
+        Wrong
       </button>
       <button class="mt-10" mat-button nbButton status="control" (click)="setAnswerScore(3)">
-        3 (Incomplete)
+        Incomplete
       </button>
       <button class="mt-10" mat-button nbButton status="control" (click)="setAnswerScore(4)">
-        4 (Helpful)
+        Helpful
       </button>
       <button class="mt-10" mat-button nbButton status="control" (click)="setAnswerScore(5)">
-        5 (Very helpful)
+        Very helpful
+      </button>
+    </div>
+
+    <!-- Answer score -->
+    <div *nbCustomMessage="'custom-options-msg'; let buttonText">
+      <p class="text-control button-custom-message-text">Let us know what you want to do next in order to help you to solve your problem</p>
+      <button mat-button nbButton status="control" (click)="openZendeskTicket()">
+        Open Ticket
+      </button>
+      <button class="mt-10" mat-button nbButton status="control" (click)="scheduleMeeting()">
+        Schedule Meeting
       </button>
     </div>
 
