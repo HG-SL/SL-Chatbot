@@ -9,6 +9,7 @@ import { Answer } from "../core/interfaces/interfaces";
 import { ScoreService } from "../core/services/responses/score.service";
 import { LocalstorageService } from "../core/services/localstorage.service";
 import { TicketsService } from "../core/services/zendesk/tickets.service";
+import { JMusersService } from "../core/services/v2/jmusers.service";
 
 @Component({
   selector: 'app-pages',
@@ -33,6 +34,7 @@ export class PagesComponent implements OnInit {
   location:any = {}
   userId:string = '';
   userIdFlag:boolean = false;
+  canScheduleMeetings:boolean = false;
 
   body:any = {}
 
@@ -64,7 +66,8 @@ export class PagesComponent implements OnInit {
     private nluService: NluService,
     private usersService: UsersService,
     private localStorageService: LocalstorageService,
-    private zendeskService: TicketsService
+    private zendeskService: TicketsService,
+    private JMusersService: JMusersService
     ) {
   }
 
@@ -216,8 +219,7 @@ export class PagesComponent implements OnInit {
             }
             else this.buildMessage(this.currentMessage,false)
 
-            // Ask the user to confirm that he read the response
-            this.buildMessage('', false, 'custom-confirmation-msg','Support')
+            // TODO: When open ticket option is clicked, give the URL to open the ticket
           })
         },
         err => {
@@ -295,13 +297,22 @@ export class PagesComponent implements OnInit {
   }
 
   // TODO: show response if ticket has response
+  /**
+   * [Sends a message with the content of a ticket]
+   * */
   getSpecificTicket(index: number){
     console.log(index)
-    this.buildMessage('', false, 'custom-specific-ticket-view', {title: this.openTickets[index].subject, date: this.openTickets[index].created_at, description: this.openTickets[index].description, priority: this.openTickets[index].priority})
+    this.buildMessage('', false, 'custom-specific-ticket-view',
+      {title: this.openTickets[index].subject, date: this.openTickets[index].created_at,
+        description: this.openTickets[index].description, priority: this.openTickets[index].priority})
   }
 
+  /**
+   * [Gives the user a link to open a support ticket on zendesk]
+   * */
   openZendeskTicket(){
-
+    let href = "pinterest.com"
+    this.buildMessage(this.currentMessage,false, 'link',{href: href, text: "Open ticket"})
   }
 
   scheduleMeeting(){
@@ -320,8 +331,14 @@ export class PagesComponent implements OnInit {
 
     // Set score
     this.scoreService.qualifyAnswer(this.currentAnswer.question_id, this.currentAnswer.answer_id, score).subscribe((res) => {
-      // TODO: Validate security level
+      // If score is below 3, give the user other options to help them with their issue
       if (score < 3){
+        // Determine if the user is allowed to schedule meetings
+        // @ts-ignore
+        this.JMusersService.checkSchedulingPermissions(this.userId).subscribe(({allowed}) => {
+          this.canScheduleMeetings = allowed
+        })
+
         this.buildMessage('', false, 'custom-options-msg','Support')
       }
       else {

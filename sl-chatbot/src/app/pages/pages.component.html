@@ -52,15 +52,6 @@
           </mat-chip-list>
         </div>
 
-
-    <!-- Answer score -->
-    <div *nbCustomMessage="'custom-confirmation-msg'; let buttonText">
-      <p class="text-control button-custom-message-text">Let us know if you read the reply above</p>
-      <button mat-button nbButton status="control" (click)="getQualification()">
-        Done
-      </button>
-    </div>
-
     <!-- Answer score -->
     <div *nbCustomMessage="'custom-score-msg'; let buttonText">
       <p class="text-control button-custom-message-text">It would help us if you could score how helpful was this response to you</p>
@@ -87,8 +78,11 @@
       <button mat-button nbButton status="control" (click)="openZendeskTicket()">
         Open Ticket
       </button>
-      <button class="mt-10" mat-button nbButton status="control" (click)="scheduleMeeting()">
+      <button class="mt-10" *ngIf="canScheduleMeetings" mat-button nbButton status="control" (click)="scheduleMeeting()">
         Schedule Meeting
+      </button>
+      <button class="mt-10" mat-button nbButton status="control" (click)="endSession()">
+        End Chat
       </button>
     </div>
 
@@ -103,8 +97,13 @@
       </button>
     </div>
 
-      <!-- Display links-->
-    <a *nbCustomMessage="'link'; let data" [href]="data.href" target="_blank">
+    <!-- Display links-->
+    <a *nbCustomMessage="'link'; let data" [href]="data.href" target="_blank" (click)="getQualification()">
+      {{ data.text }}
+    </a>
+
+    <!-- Open ticket link (special link without click function) -->
+    <a *nbCustomMessage="'ticket-link'; let data" [href]="data.href" target="_blank" (click)="getQualification()">
       {{ data.text }}
     </a>
 
