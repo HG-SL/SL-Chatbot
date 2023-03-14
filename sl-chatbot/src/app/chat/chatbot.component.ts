@@ -13,11 +13,11 @@ import { JMusersService } from "../core/services/v2/jmusers.service";
 
 @Component({
   selector: 'app-pages',
-  templateUrl: './pages.component.html',
-  styleUrls: ['./pages.component.scss']
+  templateUrl: './chatbot.component.html',
+  styleUrls: ['./chatbot.component.scss']
 })
 
-export class PagesComponent implements OnInit {
+export class ChatbotComponent implements OnInit {
   loading = false;
 
   // Enable/disable user's input

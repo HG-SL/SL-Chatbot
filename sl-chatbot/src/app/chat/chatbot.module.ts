@@ -1,22 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
-import { PagesRoutingModule } from './pages-routing.module';
-import { PagesComponent } from './pages.component';
-import { BotComponent } from './bot/bot.component';
+import { ChatbotRoutingModule } from './chatbot-routing.module';
+import { ChatbotComponent } from './chatbot.component';
 import { NbChatModule, NbSpinnerModule } from '@nebular/theme';
 
 @NgModule({
   declarations: [
-    PagesComponent, 
-    BotComponent
+    ChatbotComponent
   ],
   imports: [
     CommonModule,
-    PagesRoutingModule,
+    ChatbotRoutingModule,
     SharedModule,
     NbChatModule,
     NbSpinnerModule
   ]
 })
-export class PagesModule { }
+export class ChatbotModule { }
