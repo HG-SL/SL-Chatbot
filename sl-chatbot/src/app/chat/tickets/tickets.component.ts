@@ -1,5 +1,7 @@
 import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {TicketsService} from "../../core/services/zendesk/tickets.service";
+import { LoginComponent } from 'src/app/auth/login/login.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tickets',
@@ -12,7 +14,8 @@ export class TicketsComponent implements OnInit {
   @Output() buildMessage = new EventEmitter<any>();
   @Input() openTickets: any | undefined;
 
-  constructor(private zendeskService: TicketsService) { }
+  constructor(private zendeskService: TicketsService,
+              public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.getOpenTickets()
@@ -28,6 +31,8 @@ export class TicketsComponent implements OnInit {
       console.log(tickets)
       this.buildMessage.emit({text:'', reply:false, type:'custom-ticket-list-view'})
     })
+
+    this.dialog.open(LoginComponent);
   }
 
   // TODO: show response if ticket has response

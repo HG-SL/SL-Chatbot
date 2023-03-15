@@ -6,7 +6,7 @@ import { ChatbotComponent } from './chatbot.component';
 import { NbChatModule, NbSpinnerModule } from '@nebular/theme';
 import { SupportComponent } from './support/support.component';
 import { TicketsComponent } from "./tickets/tickets.component";
-import { LoginComponent } from "../auth/login/login.component";
+import { AuthModule } from "../auth/auth.module";
 import {PortalModule} from "@angular/cdk/portal";
 
 
@@ -14,11 +14,7 @@ import {PortalModule} from "@angular/cdk/portal";
   declarations: [
     ChatbotComponent,
     SupportComponent,
-    TicketsComponent,
-    LoginComponent
-  ],
-  exports: [
-    LoginComponent
+    TicketsComponent
   ],
   imports: [
     CommonModule,
@@ -26,7 +22,9 @@ import {PortalModule} from "@angular/cdk/portal";
     SharedModule,
     NbChatModule,
     NbSpinnerModule,
-    PortalModule
+    PortalModule,
+    AuthModule
+
   ]
 })
 export class ChatbotModule { }
