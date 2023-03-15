@@ -4,10 +4,12 @@ import { SharedModule } from '../shared/shared.module';
 import { ChatbotRoutingModule } from './chatbot-routing.module';
 import { ChatbotComponent } from './chatbot.component';
 import { NbChatModule, NbSpinnerModule } from '@nebular/theme';
+import { SupportComponent } from './support/support.component';
 
 @NgModule({
   declarations: [
-    ChatbotComponent
+    ChatbotComponent,
+    SupportComponent
   ],
   imports: [
     CommonModule,

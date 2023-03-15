@@ -1,73 +1,50 @@
 <div>
     <nb-chat *ngFor="let chat of chats"  [title]="chat.title" [status]="chat.status">
     <!-- Type of service selector -->
-        <div *nbCustomMessage="'button'; let buttonText">
-          <p class="text-control button-custom-message-text">Please select the service you required</p>
-          <button mat-button nbButton status="control" (click)="getSupport()">
-            Support
-          </button>
-          <button mat-button nbButton status="control " class="mt-10" (click)="getOpenTickets()">
-            Open tickets
-          </button>
-          <button mat-button nbButton status="control " class="mt-10" (click)="getLicense()">
-              License
-          </button>
-        </div>
-
-      <!-- Ticket view -->
-      <div *nbCustomMessage="'custom-ticket-list-view';">
-        <p class="text-control button-custom-message-text">Open tickets, click each ticket to see content</p>
-        <button *ngFor="let ticket of openTickets" mat-button nbButton status="control" (click)="getSpecificTicket(openTickets.indexOf(ticket))">
-          {{ticket.subject}}
-        </button>
-      </div>
-
-      <div *nbCustomMessage="'custom-specific-ticket-view' let data;">
-        <b>{{data.title}}</b>
-        <br>
-        <small>{{data.date}}</small>
-        <p class="text-control-small">
-          {{data.description}}
-        </p>
-
-        <mat-chip-list #chipList>
-          <mat-chip color="primary">
-            {{data.priority}}
-          </mat-chip>
-        </mat-chip-list>
-      </div>
+    <div *nbCustomMessage="'button'; let buttonText">
+      <p class="text-control button-custom-message-text">Please select the service you required</p>
+      <button mat-button nbButton status="control" (click)="getSupport()" [disabled]="buttonDisabled">
+        Support
+      </button>
+      <button mat-button nbButton status="control " class="mt-10" (click)="getOpenTickets()" [disabled]="buttonDisabled">
+        Open tickets
+      </button>
+      <button mat-button nbButton status="control " class="mt-10" (click)="getLicense()" [disabled]="buttonDisabled">
+          License
+      </button>
+    </div>
 
     <!-- User ID form-->
-        <div *nbCustomMessage="'custom-email-msg'; let data">
-          <p class="text-control button-custom-message-text">{{data}}</p>
-        </div>
+    <div *nbCustomMessage="'custom-email-msg'; let data">
+      <p class="text-control button-custom-message-text">{{data}}</p>
+    </div>
 
     <!-- Product selector-->
-        <div *nbCustomMessage="'custom-products-msg'; let data">
-          <p class="text-control button-custom-message-text">Please select the product you have any questions about</p>
-          <mat-chip-list #chipList>
-            <mat-chip *ngFor="let product of products" [removable]="removable" (click)="selectProduct(product)">
-              {{product.Product_Name}}
-            </mat-chip>
-          </mat-chip-list>
-        </div>
+    <div *nbCustomMessage="'custom-products-msg'; let data">
+      <p class="text-control button-custom-message-text">Please select the product you have any questions about</p>
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let product of products" [removable]="removable" (click)="sc?.selectProduct(product)">
+          {{product.Product_Name}}
+        </mat-chip>
+      </mat-chip-list>
+    </div>
 
     <!-- Answer score -->
     <div *nbCustomMessage="'custom-score-msg'; let buttonText">
       <p class="text-control button-custom-message-text">It would help us if you could score how helpful was this response to you</p>
-      <button mat-button nbButton status="control" (click)="setAnswerScore(1)">
+      <button mat-button nbButton status="control" (click)="sc?.setAnswerScore(1)">
         No response
       </button>
-      <button class="mt-10" mat-button nbButton status="control" (click)="setAnswerScore(2)">
+      <button class="mt-10" mat-button nbButton status="control" (click)="sc?.setAnswerScore(2)">
         Wrong
       </button>
-      <button class="mt-10" mat-button nbButton status="control" (click)="setAnswerScore(3)">
+      <button class="mt-10" mat-button nbButton status="control" (click)="sc?.setAnswerScore(3)">
         Incomplete
       </button>
-      <button class="mt-10" mat-button nbButton status="control" (click)="setAnswerScore(4)">
+      <button class="mt-10" mat-button nbButton status="control" (click)="sc?.setAnswerScore(4)">
         Helpful
       </button>
-      <button class="mt-10" mat-button nbButton status="control" (click)="setAnswerScore(5)">
+      <button class="mt-10" mat-button nbButton status="control" (click)="sc?.setAnswerScore(5)">
         Very helpful
       </button>
     </div>
@@ -75,13 +52,13 @@
     <!-- Answer score -->
     <div *nbCustomMessage="'custom-options-msg'; let buttonText">
       <p class="text-control button-custom-message-text">Let us know what you want to do next in order to help you to solve your problem</p>
-      <button mat-button nbButton status="control" (click)="openZendeskTicket()">
+      <button mat-button nbButton status="control" (click)="sc?.openZendeskTicket()">
         Open Ticket
       </button>
-      <button class="mt-10" *ngIf="canScheduleMeetings" mat-button nbButton status="control" (click)="scheduleMeeting()">
+      <button class="mt-10" *ngIf="canScheduleMeetings" mat-button nbButton status="control" (click)="sc?.scheduleMeeting()">
         Schedule Meeting
       </button>
-      <button class="mt-10" mat-button nbButton status="control" (click)="endSession()">
+      <button class="mt-10" mat-button nbButton status="control" (click)="sc?.endSession()">
         End Chat
       </button>
     </div>
@@ -89,21 +66,16 @@
     <!-- Menu for other responses -->
     <div *nbCustomMessage="'custom-retry-msg'; let buttonText">
       <p class="text-control button-custom-message-text">You got any other questions?</p>
-      <button mat-button nbButton status="control" (click)="endSession()">
+      <button mat-button nbButton status="control" (click)="sc?.endSession()">
         No
       </button>
-      <button class="mt-10" mat-button nbButton status="control" (click)="restartSession()">
+      <button class="mt-10" mat-button nbButton status="control" (click)="sc?.restartSession()">
         Yes
       </button>
     </div>
 
     <!-- Display links-->
-    <a *nbCustomMessage="'link'; let data" [href]="data.href" target="_blank" (click)="getQualification()">
-      {{ data.text }}
-    </a>
-
-    <!-- Open ticket link (special link without click function) -->
-    <a *nbCustomMessage="'ticket-link'; let data" [href]="data.href" target="_blank" (click)="getQualification()">
+    <a *nbCustomMessage="'link'; let data" [href]="data.href" target="_blank" (click)="sc?.linkClick(purpose)">
       {{ data.text }}
     </a>
 
@@ -118,17 +90,49 @@
                      [customMessageData]="msg.customMessageData">
     </nb-chat-message>
 
-        <!-- <nb-chat-message
-          *ngIf="loading"
-          [nbSpinner]="loading"
-          nbSpinnerStatus="info"
-          type="text"
-          avatar="../assets/bot.png"
-          message="...">
-        </nb-chat-message> -->
+    <app-support *ngIf="serviceType == 'support'" [location]="location" [userId]="userId" [userIdFlag]="userIdFlag"
+                 (enable)="setEnabled($event)"
+                 (buildMessage)="buildMessage($event)"
+                 (validateUserId)="validateUserId($event)"
+                 (setCanScheduleMeetings)="setCanScheduleMeetings($event)"
+                 (setPurpose)="setPurpose($event)"
+                 (setProducts)="setProducts($event)"></app-support>
 
-        <nb-chat-form *ngIf="enabled" (send)="sendMessage($event)" [dropFiles]="true">
-        </nb-chat-form>
+    <nb-chat-form *ngIf="enabled" (send)="sendMessage($event)" [dropFiles]="true">
+    </nb-chat-form>
+
+<!--      <div *nbCustomMessage="'custom-specific-ticket-view' let data;">-->
+<!--        <b>{{data.title}}</b>-->
+<!--        <br>-->
+<!--        <small>{{data.date}}</small>-->
+<!--        <p class="text-control-small">-->
+<!--          {{data.description}}-->
+<!--        </p>-->
+
+<!--        <mat-chip-list #chipList>-->
+<!--          <mat-chip color="primary">-->
+<!--            {{data.priority}}-->
+<!--          </mat-chip>-->
+<!--        </mat-chip-list>-->
+<!--      </div>-->
+
+<!--&lt;!&ndash; Ticket view &ndash;&gt;-->
+<!--<div *nbCustomMessage="'custom-ticket-list-view';">-->
+<!--  <p class="text-control button-custom-message-text">Open tickets, click each ticket to see content</p>-->
+<!--  <button *ngFor="let ticket of openTickets" mat-button nbButton status="control" (click)="getSpecificTicket(openTickets.indexOf(ticket))">-->
+<!--    {{ticket.subject}}-->
+<!--  </button>-->
+<!--</div>-->
+
+<!--        &lt;!&ndash; <nb-chat-message-->
+<!--          *ngIf="loading"-->
+<!--          [nbSpinner]="loading"-->
+<!--          nbSpinnerStatus="info"-->
+<!--          type="text"-->
+<!--          avatar="../assets/bot.png"-->
+<!--          message="...">-->
+<!--        </nb-chat-message> &ndash;&gt;-->
+
+
     </nb-chat>
 </div>
-<!--<router-outlet></router-outlet> -->
