@@ -180,8 +180,16 @@ export class ChatbotComponent implements OnInit {
     this.purpose = purpose
   }
 
+  setButtonDisabled(buttonDisabled: boolean){
+    this.buttonDisabled = buttonDisabled
+  }
+
   setOpenTickets(openTickets: any){
     this.openTickets = openTickets
+  }
+
+  setServiceType(serviceType: any){
+    this.serviceType = serviceType
   }
 
   /**

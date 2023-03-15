@@ -119,7 +119,10 @@
                  (validateUserId)="validateUserId($event)"
                  (setCanScheduleMeetings)="setCanScheduleMeetings($event)"
                  (setPurpose)="setPurpose($event)"
-                 (setProducts)="setProducts($event)"></app-support>
+                 (setProducts)="setProducts($event)"
+                 (setButtonDisabled)="setButtonDisabled($event)"
+                 (setServiceType)="setServiceType($event)"
+    ></app-support>
 
     <app-tickets *ngIf="serviceType == 'open_tickets'" [openTickets]="openTickets"
                  (buildMessage)="buildMessage($event)"

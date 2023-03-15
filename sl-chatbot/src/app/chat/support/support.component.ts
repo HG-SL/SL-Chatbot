@@ -23,6 +23,8 @@ export class SupportComponent implements AfterViewInit {
   @Output() validateUserId = new EventEmitter<any>();
   @Output() setCanScheduleMeetings = new EventEmitter<any>();
   @Output() setPurpose = new EventEmitter<any>();
+  @Output() setButtonDisabled = new EventEmitter<any>();
+  @Output() setServiceType = new EventEmitter<any>();
   @Input() userIdFlag: boolean | undefined;
   @Input() userId: string | undefined;
   @Input() location: any | undefined;
@@ -243,6 +245,8 @@ export class SupportComponent implements AfterViewInit {
   restartSession(){
     this.buildMessage.emit({text: 'Hello, how can I help you?', reply: false, type: 'button', customMessageData: 'Support'}) // Greeting
     this.localStorageService.setCurrentItem('userIdFlag', false);
+    this.setButtonDisabled.emit(false)
+    this.setServiceType.emit('')
   }
 
   /**
