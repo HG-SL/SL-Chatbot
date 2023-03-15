@@ -1,0 +1,29 @@
+<div id="login-container" class="container center">
+  <div fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex fxFlexAlign="center">
+
+      <div fxFlex class="login-col">
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <div fxFlex>
+            <br><br>
+            <img src="assets/img/1200x600.png" width="220">
+          </div>
+
+          <form [formGroup]="loginForm" fxLayout="column" fxLayoutAlign="center center" fxFill>
+            <mat-form-field fxFlex class="fill mb-50" appearance="outline">
+              <input matInput placeholder="Email" formControlName="email">
+            </mat-form-field>
+
+            <mat-form-field fxFlex class="fill mb-50" appearance="outline">
+              <input matInput placeholder="Password" type="password" formControlName="password">
+            </mat-form-field>
+          </form>
+
+          <button mat-flat-button color="primary" (click)="onSubmit()">Login</button>
+          <br><br><br>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

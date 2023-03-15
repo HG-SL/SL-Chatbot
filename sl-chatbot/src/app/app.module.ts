@@ -8,22 +8,26 @@ import { NbSecurityModule } from '@nebular/security';
 import { NbThemeModule, NbLayoutModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { HttpClientModule } from '@angular/common/http';
+import {PortalModule} from "@angular/cdk/portal";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    NbSecurityModule,
-    NbThemeModule.forRoot({ name: 'default' }),
-    NbLayoutModule,
-    NbEvaIconsModule,
-    HttpClientModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent
+    ],
+    imports: [
+        BrowserModule,
+        PortalModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        NbSecurityModule,
+        NbThemeModule.forRoot({name: 'default'}),
+        NbLayoutModule,
+        NbEvaIconsModule,
+        HttpClientModule
+    ],
+    providers: [],
+    exports: [
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

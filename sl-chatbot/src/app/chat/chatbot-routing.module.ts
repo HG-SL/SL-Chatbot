@@ -8,7 +8,7 @@ const routes: Routes = [
     component: ChatbotComponent,
     children: [
       { path: '', redirectTo: 'chatbot', pathMatch: 'full' },
-      { path: 'chatbot', component: ChatbotComponent },
+      { path: 'chatbot', component: ChatbotComponent }
     ]
   }
 ];

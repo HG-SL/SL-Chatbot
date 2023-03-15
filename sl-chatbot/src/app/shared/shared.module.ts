@@ -1,8 +1,9 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule  } from '@angular/forms';
 import { MaterialModule } from './material/material.module';
 import { FlexLayoutModule } from "@angular/flex-layout";
+import { AvatarModule } from "ngx-avatar";
 
 @NgModule({
   declarations: [],
@@ -11,13 +12,16 @@ import { FlexLayoutModule } from "@angular/flex-layout";
     ReactiveFormsModule,
     FormsModule,
     MaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    AvatarModule
   ],
   exports: [
     ReactiveFormsModule,
     FormsModule,
     MaterialModule,
-    FlexLayoutModule
-  ]
+    FlexLayoutModule,
+    AvatarModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SharedModule { }

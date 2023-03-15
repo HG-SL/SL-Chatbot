@@ -9,6 +9,9 @@ import {LocalstorageService} from "../core/services/localstorage.service";
 import {TicketsService} from "../core/services/zendesk/tickets.service";
 import {SupportComponent} from "./support/support.component";
 import {TicketsComponent} from "./tickets/tickets.component";
+import {MatDialog} from "@angular/material/dialog";
+import {LoginComponent} from "../auth/login/login.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-pages',
@@ -63,8 +66,8 @@ export class ChatbotComponent implements OnInit {
     private nluService: NluService,
     private usersService: UsersService,
     private localStorageService: LocalstorageService,
-    private zendeskService: TicketsService,
-    private ref: ChangeDetectorRef
+    public dialog: MatDialog,
+    public router: Router
     ) {
   }
 
@@ -201,6 +204,9 @@ export class ChatbotComponent implements OnInit {
     this.enabled = true
   }
 
+  /**
+   * [Start check open tickets flow]
+   * */
   getOpenTickets(){
     this.serviceType = 'open_tickets'
     this.buttonDisabled = true

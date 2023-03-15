@@ -25,6 +25,7 @@
     "@nebular/security": "^8.0.0",
     "@nebular/theme": "^8.0.0",
     "eva-icons": "^1.1.2",
+    "ngx-avatar": "^4.1.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

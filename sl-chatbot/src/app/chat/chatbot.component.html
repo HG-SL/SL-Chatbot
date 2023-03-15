@@ -82,7 +82,7 @@
     <!-- Ticket view -->
     <div *nbCustomMessage="'custom-ticket-list-view';">
       <p class="text-control button-custom-message-text">Open tickets, click each ticket to see content</p>
-      <button *ngFor="let ticket of openTickets" mat-button nbButton status="control" (click)="tc?.getSpecificTicket(openTickets.indexOf(ticket))">
+      <button *ngFor="let ticket of openTickets" class="mt-10" mat-button nbButton status="control" (click)="tc?.getSpecificTicket(openTickets.indexOf(ticket))">
         {{ticket.subject}}
       </button>
     </div>
@@ -139,7 +139,7 @@
 <!--          avatar="../assets/bot.png"-->
 <!--          message="...">-->
 <!--        </nb-chat-message> &ndash;&gt;-->
-
-
     </nb-chat>
 </div>
+
+<app-login></app-login>
