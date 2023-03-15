@@ -8,6 +8,7 @@ import {ScoreService} from "../core/services/responses/score.service";
 import {LocalstorageService} from "../core/services/localstorage.service";
 import {TicketsService} from "../core/services/zendesk/tickets.service";
 import {SupportComponent} from "./support/support.component";
+import {TicketsComponent} from "./tickets/tickets.component";
 
 @Component({
   selector: 'app-pages',
@@ -17,6 +18,7 @@ import {SupportComponent} from "./support/support.component";
 
 export class ChatbotComponent implements OnInit {
   @ViewChild(SupportComponent) public sc: SupportComponent | undefined;
+  @ViewChild(TicketsComponent) public tc: TicketsComponent | undefined;
 
   loading = false;
 
@@ -47,6 +49,9 @@ export class ChatbotComponent implements OnInit {
     status: 'primary',
     title: 'Shocklogic',
   }]
+
+  // Zendesk
+  openTickets: any = [];
 
   messages: any[] = []
 
@@ -175,6 +180,10 @@ export class ChatbotComponent implements OnInit {
     this.purpose = purpose
   }
 
+  setOpenTickets(openTickets: any){
+    this.openTickets = openTickets
+  }
+
   /**
    * [Start user's support flow]
    * */
@@ -185,33 +194,11 @@ export class ChatbotComponent implements OnInit {
   }
 
   getOpenTickets(){
-    // TODO: servicetype = ticket management, this goes in another component
-    // /**
-    //  * [Get the open tickets from a specified email]
-    //  * */
-    // // @ts-ignore
-    // this.zendeskService.getOpenTickets("j.grimshaw@iicom.org").subscribe(({tickets}) => {
-    //   this.openTickets = tickets.results;
-    //   console.log(tickets)
-    //   this.buildMessage({text:'', reply:false, type:'custom-ticket-list-view'})
-    // })
+    this.serviceType = 'open_tickets'
+    this.buttonDisabled = true
   }
 
   getLicense(){
 
   }
-
-
-  // // TODO: show response if ticket has response
-  // /**
-  //  * [Sends a message with the content of a ticket]
-  //  * */
-  // getSpecificTicket(index: number){
-  //   this.buildMessage.emit({text:'', reply:false, type:'custom-specific-ticket-view', customMessageData:null})
-  //
-  // //   this.buildMessage('', false, 'custom-specific-ticket-view',
-  // //     {title: this.openTickets[index].subject, date: this.openTickets[index].created_at,
-  // //       description: this.openTickets[index].description, priority: this.openTickets[index].priority})
-  // //
-  // }
 }

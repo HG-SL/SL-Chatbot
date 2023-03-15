@@ -5,11 +5,14 @@ import { ChatbotRoutingModule } from './chatbot-routing.module';
 import { ChatbotComponent } from './chatbot.component';
 import { NbChatModule, NbSpinnerModule } from '@nebular/theme';
 import { SupportComponent } from './support/support.component';
+import { TicketsComponent } from "./tickets/tickets.component";
+
 
 @NgModule({
   declarations: [
     ChatbotComponent,
-    SupportComponent
+    SupportComponent,
+    TicketsComponent
   ],
   imports: [
     CommonModule,

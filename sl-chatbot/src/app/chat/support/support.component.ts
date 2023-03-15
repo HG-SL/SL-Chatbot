@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
 import {getTimeFormat} from "../../core/utils/date.formatting";
 import {ProductsService} from "../../core/services/products.service";
 import {UsersService} from "../../core/services/users.service";
@@ -184,11 +184,12 @@ export class SupportComponent implements AfterViewInit {
     this.buildMessage.emit({text: '', reply: false, type: 'custom-score-msg', customMessageData: 'Support'})
   }
 
+
+  /**
+   * [Score the quality of an answer]
+   * @param {[score]} number [Score]
+   * */
   setAnswerScore(score:number){
-    /**
-     * [Score the quality of an answer]
-     * @param {[score]} number [Score]
-     * */
     // Reply using the score
     this.buildMessage.emit({text: score.toString(), reply: true})
 
@@ -229,23 +230,25 @@ export class SupportComponent implements AfterViewInit {
 
   }
 
-
+  /**
+   * [Farewell message to the user]
+   * */
   endSession(){
-    /**
-     * [Farewell message to the user]
-     * */
     this.buildMessage.emit({text: 'Have a good day!', reply: false, type: 'text', customMessageData: 'Support'})
   }
 
-
+  /**
+   * [Restart process]
+   * */
   restartSession(){
-    /**
-     * [Restart process]
-     * */
     this.buildMessage.emit({text: 'Hello, how can I help you?', reply: false, type: 'button', customMessageData: 'Support'}) // Greeting
     this.localStorageService.setCurrentItem('userIdFlag', false);
   }
 
+  /**
+   * [Execute a function after clicking a link depending on where in the user's flow it is]
+   * @param {[string]} purpose [Purpose of the given link]
+   * */
   linkClick(purpose: string){
     if (purpose == 'zendesk_article'){
       this.getQualification()

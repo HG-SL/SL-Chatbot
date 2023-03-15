@@ -79,6 +79,29 @@
       {{ data.text }}
     </a>
 
+    <!-- Ticket view -->
+    <div *nbCustomMessage="'custom-ticket-list-view';">
+      <p class="text-control button-custom-message-text">Open tickets, click each ticket to see content</p>
+      <button *ngFor="let ticket of openTickets" mat-button nbButton status="control" (click)="tc?.getSpecificTicket(openTickets.indexOf(ticket))">
+        {{ticket.subject}}
+      </button>
+    </div>
+
+    <div *nbCustomMessage="'custom-specific-ticket-view' let data;">
+      <b>{{data.title}}</b>
+      <br>
+      <small>{{data.date}}</small>
+      <p class="text-control-small">
+        {{data.description}}
+      </p>
+
+      <mat-chip-list #chipList *ngIf="data.priority != null">
+        <mat-chip color="primary">
+          {{data.priority}}
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+
     <!-- Other messages-->
     <nb-chat-message *ngFor="let msg of messages"
                      [type]="msg.type"
@@ -98,31 +121,12 @@
                  (setPurpose)="setPurpose($event)"
                  (setProducts)="setProducts($event)"></app-support>
 
+    <app-tickets *ngIf="serviceType == 'open_tickets'" [openTickets]="openTickets"
+                 (buildMessage)="buildMessage($event)"
+                 (setOpenTickets)="setOpenTickets($event)"></app-tickets>
+
     <nb-chat-form *ngIf="enabled" (send)="sendMessage($event)" [dropFiles]="true">
     </nb-chat-form>
-
-<!--      <div *nbCustomMessage="'custom-specific-ticket-view' let data;">-->
-<!--        <b>{{data.title}}</b>-->
-<!--        <br>-->
-<!--        <small>{{data.date}}</small>-->
-<!--        <p class="text-control-small">-->
-<!--          {{data.description}}-->
-<!--        </p>-->
-
-<!--        <mat-chip-list #chipList>-->
-<!--          <mat-chip color="primary">-->
-<!--            {{data.priority}}-->
-<!--          </mat-chip>-->
-<!--        </mat-chip-list>-->
-<!--      </div>-->
-
-<!--&lt;!&ndash; Ticket view &ndash;&gt;-->
-<!--<div *nbCustomMessage="'custom-ticket-list-view';">-->
-<!--  <p class="text-control button-custom-message-text">Open tickets, click each ticket to see content</p>-->
-<!--  <button *ngFor="let ticket of openTickets" mat-button nbButton status="control" (click)="getSpecificTicket(openTickets.indexOf(ticket))">-->
-<!--    {{ticket.subject}}-->
-<!--  </button>-->
-<!--</div>-->
 
 <!--        &lt;!&ndash; <nb-chat-message-->
 <!--          *ngIf="loading"-->
