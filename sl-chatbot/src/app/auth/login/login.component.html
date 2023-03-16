@@ -11,15 +11,19 @@
 
           <form [formGroup]="loginForm" fxLayout="column" fxLayoutAlign="center center" fxFill>
             <mat-form-field fxFlex class="fill mb-50" appearance="outline">
-              <input matInput placeholder="Email" formControlName="email">
+              <mat-label>Username</mat-label>
+              <input matInput formControlName="email" class="form-control">
             </mat-form-field>
 
             <mat-form-field fxFlex class="fill mb-50" appearance="outline">
-              <input matInput placeholder="Password" type="password" formControlName="password">
+              <mat-label>Password </mat-label>
+              <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="password" class="form-control">
+              <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
             </mat-form-field>
+            <button mat-flat-button color="primary" [disabled]="!loginForm.valid " (click)="onSubmit()">Login</button>
           </form>
-
-          <button mat-flat-button color="primary" (click)="onSubmit()">Login</button>
           <br><br><br>
         </div>
       </div>

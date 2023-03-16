@@ -9,7 +9,6 @@ export class LoginService extends ApiService {
   login(user: any){
     let httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
         'Token-App': this.TOKEN_APP
       })
     }
