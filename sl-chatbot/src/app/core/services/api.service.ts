@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {environment} from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,9 @@ import {environment} from '../../../environments/environment';
 export class ApiService {
 
   API_URL = environment.apiUrl;
-  LOCATION = environment.locationUrl
+  LOCATION = environment.locationUrl;
+  V1_URL = environment.v1ApiUrl;
+  TOKEN_APP = environment.tokenApp
 
   httpOptions = {
     headers: new HttpHeaders({

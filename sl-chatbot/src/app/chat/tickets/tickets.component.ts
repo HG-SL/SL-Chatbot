@@ -25,14 +25,15 @@ export class TicketsComponent implements OnInit {
    * [Get the open tickets from a specified email]
    * */
   getOpenTickets(){
+    this.dialog.open(LoginComponent, {
+    });
+
     // @ts-ignore
     this.zendeskService.getOpenTickets("j.grimshaw@iicom.org").subscribe(({tickets}) => {
       this.setOpenTickets.emit(tickets.results);
       console.log(tickets)
       this.buildMessage.emit({text:'', reply:false, type:'custom-ticket-list-view'})
     })
-
-    this.dialog.open(LoginComponent);
   }
 
   // TODO: show response if ticket has response

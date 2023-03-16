@@ -21,3 +21,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 #chatlogic .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
   color: #ff6e0b !important;
 }
+
+/* Snackbars */
+#chatlogic .mat-simple-snackbar-action {
+  color: #ff6e0b;
+}
