@@ -16,4 +16,12 @@ export class JMusersService extends ApiService {
     }
     return this.http.post(this.API_URL+'check-user-perms', body, this.httpOptions)
   }
+
+  getEmail(userId: any){
+    let body = {
+      User_Id: userId
+    }
+
+    return this.http.post(this.API_URL+'get-email', body, this.httpOptions)
+  }
 }

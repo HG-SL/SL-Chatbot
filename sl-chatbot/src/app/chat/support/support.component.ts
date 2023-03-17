@@ -153,8 +153,6 @@ export class SupportComponent implements AfterViewInit {
               this.setPurpose.emit('zendesk_article')
             }
             else this.buildMessage.emit({text:this.currentMessage, reply:false})
-
-            // TODO: When open ticket option is clicked, give the URL to open the ticket
           })
         },
           (err: any) => {

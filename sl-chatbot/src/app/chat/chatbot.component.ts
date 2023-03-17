@@ -13,6 +13,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {LoginComponent} from "../auth/login/login.component";
 import {Router} from "@angular/router";
 import {findSpecificItem} from "../core/utils/array.helper";
+import {JMusersService} from "../core/services/v2/jmusers.service";
 
 @Component({
   selector: 'app-pages',
@@ -42,6 +43,7 @@ export class ChatbotComponent implements OnInit {
   userIdFlag:boolean = false;
   canScheduleMeetings:boolean = false;
   token:string | null = '';
+  email:any = '';
 
   body:any = {}
 
@@ -68,8 +70,7 @@ export class ChatbotComponent implements OnInit {
     private nluService: NluService,
     private usersService: UsersService,
     private localStorageService: LocalstorageService,
-    public dialog: MatDialog,
-    public router: Router
+    private JMUsersService: JMusersService
     ) {
   }
 
@@ -212,8 +213,14 @@ export class ChatbotComponent implements OnInit {
   getOpenTickets(){
     this.token = this.localStorageService.getCurrentItem('token')
     this.userId = this.localStorageService.getCurrentItem('userId')
-    this.serviceType = 'open_tickets'
-    this.buttonDisabled = true
+
+    // Get user's email in JM_User table
+    // @ts-ignore
+    this.JMUsersService.getEmail(this.userId).subscribe(({email}) => {
+      this.email = email;
+      this.serviceType = 'open_tickets'
+      this.buttonDisabled = true
+    })
   }
 
   /**

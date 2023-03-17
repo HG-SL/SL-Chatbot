@@ -36,6 +36,7 @@ export class TicketsComponent implements OnInit {
     else {
       // @ts-ignore
       this.zendeskService.getOpenTickets("j.grimshaw@iicom.org").subscribe(({tickets}) => {
+        console.log(tickets)
         this.setOpenTickets.emit(tickets.results);
         this.buildMessage.emit({text: 'Open tickets, click each ticket to see content', reply: false})
         this.buildMessage.emit({text:'', reply:false, type:'custom-ticket-list-view'})
@@ -43,7 +44,6 @@ export class TicketsComponent implements OnInit {
     }
   }
 
-  // TODO: show response if ticket has response
   /**
    * [Sends a message with the content of a ticket]
    * */
