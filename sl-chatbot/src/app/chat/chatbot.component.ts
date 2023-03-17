@@ -12,6 +12,7 @@ import {TicketsComponent} from "./tickets/tickets.component";
 import {MatDialog} from "@angular/material/dialog";
 import {LoginComponent} from "../auth/login/login.component";
 import {Router} from "@angular/router";
+import {findSpecificItem} from "../core/utils/array.helper";
 
 @Component({
   selector: 'app-pages',
@@ -213,6 +214,15 @@ export class ChatbotComponent implements OnInit {
     this.userId = this.localStorageService.getCurrentItem('userId')
     this.serviceType = 'open_tickets'
     this.buttonDisabled = true
+  }
+
+  /**
+   * [Go back to main menu]
+   * */
+  getMainMenu(){
+    this.buildMessage({text: 'Hello, how can I help you?', reply: false, type:'button', customMessageData:'Support'}) // Greeting
+    this.buttonDisabled = false
+    findSpecificItem("how can I", this.messages)
   }
 
   getLicense(){

@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormsModule  } from '@angular/forms';
 import { MaterialModule } from './material/material.module';
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { AvatarModule } from "ngx-avatar";
+import {NbBadgeModule} from "@nebular/theme";
 
 @NgModule({
   declarations: [],
@@ -13,14 +14,16 @@ import { AvatarModule } from "ngx-avatar";
     FormsModule,
     MaterialModule,
     FlexLayoutModule,
-    AvatarModule
+    AvatarModule,
+    NbBadgeModule
   ],
   exports: [
     ReactiveFormsModule,
     FormsModule,
     MaterialModule,
     FlexLayoutModule,
-    AvatarModule
+    AvatarModule,
+    NbBadgeModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

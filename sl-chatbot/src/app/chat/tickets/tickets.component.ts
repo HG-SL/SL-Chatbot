@@ -37,7 +37,7 @@ export class TicketsComponent implements OnInit {
       // @ts-ignore
       this.zendeskService.getOpenTickets("j.grimshaw@iicom.org").subscribe(({tickets}) => {
         this.setOpenTickets.emit(tickets.results);
-        console.log(tickets)
+        this.buildMessage.emit({text: 'Open tickets, click each ticket to see content', reply: false})
         this.buildMessage.emit({text:'', reply:false, type:'custom-ticket-list-view'})
       })
     }

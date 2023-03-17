@@ -81,9 +81,11 @@
 
     <!-- Ticket view -->
     <div *nbCustomMessage="'custom-ticket-list-view';">
-      <p class="text-control button-custom-message-text">Open tickets, click each ticket to see content</p>
       <button *ngFor="let ticket of openTickets" class="mt-10" mat-button nbButton status="control" (click)="tc?.getSpecificTicket(openTickets.indexOf(ticket))">
-        {{ticket.subject}}
+        {{ticket.id}}
+      </button>
+      <button class="mt-10" mat-button nbButton (click)="getMainMenu()">
+        Back
       </button>
     </div>
 
@@ -91,15 +93,15 @@
       <b>{{data.title}}</b>
       <br>
       <small>{{data.date}}</small>
-      <p class="text-control-small">
+      <p class="text-control-small ticket-list">
         {{data.description}}
       </p>
 
-      <mat-chip-list #chipList *ngIf="data.priority != null">
-        <mat-chip color="primary">
-          {{data.priority}}
-        </mat-chip>
-      </mat-chip-list>
+      <nb-badge text="{{data.priority}}" status="warning" position="bottom right"></nb-badge>
+
+      <button mat-button nbButton (click)="tc?.getOpenTickets()">
+        Back
+      </button>
     </div>
 
     <!-- Other messages-->
@@ -141,4 +143,3 @@
 <!--        </nb-chat-message> &ndash;&gt;-->
     </nb-chat>
 </div>
-
