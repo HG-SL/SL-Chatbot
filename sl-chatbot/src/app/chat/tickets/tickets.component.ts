@@ -2,6 +2,7 @@ import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {TicketsService} from "../../core/services/zendesk/tickets.service";
 import { LoginComponent } from 'src/app/auth/login/login.component';
 import { MatDialog } from '@angular/material/dialog';
+import {LocalstorageService} from "../../core/services/localstorage.service";
 
 @Component({
   selector: 'app-tickets',
@@ -13,6 +14,8 @@ export class TicketsComponent implements OnInit {
   @Output() setOpenTickets = new EventEmitter<any>();
   @Output() buildMessage = new EventEmitter<any>();
   @Input() openTickets: any | undefined;
+  @Input() token: any;
+  @Input() userId: any;
 
   constructor(private zendeskService: TicketsService,
               public dialog: MatDialog) { }
@@ -25,15 +28,19 @@ export class TicketsComponent implements OnInit {
    * [Get the open tickets from a specified email]
    * */
   getOpenTickets(){
-    this.dialog.open(LoginComponent, {
-    });
-
-    // @ts-ignore
-    this.zendeskService.getOpenTickets("j.grimshaw@iicom.org").subscribe(({tickets}) => {
-      this.setOpenTickets.emit(tickets.results);
-      console.log(tickets)
-      this.buildMessage.emit({text:'', reply:false, type:'custom-ticket-list-view'})
-    })
+    // If there's no token and user ID then open login form
+    if (!(this.token && this.userId)){
+      this.dialog.open(LoginComponent, {
+      });
+    }
+    else {
+      // @ts-ignore
+      this.zendeskService.getOpenTickets("j.grimshaw@iicom.org").subscribe(({tickets}) => {
+        this.setOpenTickets.emit(tickets.results);
+        console.log(tickets)
+        this.buildMessage.emit({text:'', reply:false, type:'custom-ticket-list-view'})
+      })
+    }
   }
 
   // TODO: show response if ticket has response

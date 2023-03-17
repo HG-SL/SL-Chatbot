@@ -19,7 +19,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* Form fields */
 #chatlogic .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
-  color: #ff6e0b !important;
+  color: #ff6e0b;
+}
+
+#chatlogic .mat-input-element{
+  caret-color: #ff6e0b;
+}
+
+#chatlogic .custom-label {
+  color: #ff6e0b;
 }
 
 /* Snackbars */

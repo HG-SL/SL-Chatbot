@@ -37,9 +37,10 @@ export class ChatbotComponent implements OnInit {
 
   // User data
   location:any = {}
-  userId:string = '';
+  userId:any = '';
   userIdFlag:boolean = false;
   canScheduleMeetings:boolean = false;
+  token:string | null = '';
 
   body:any = {}
 
@@ -205,9 +206,11 @@ export class ChatbotComponent implements OnInit {
   }
 
   /**
-   * [Start check open tickets flow]
+   * [Start check open tickets flow, user will only be able to visualize tickets if they are logged on]
    * */
   getOpenTickets(){
+    this.token = this.localStorageService.getCurrentItem('token')
+    this.userId = this.localStorageService.getCurrentItem('userId')
     this.serviceType = 'open_tickets'
     this.buttonDisabled = true
   }

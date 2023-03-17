@@ -5,6 +5,8 @@ import {
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LoginService} from "../../core/services/auth/login.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatDialog} from "@angular/material/dialog";
+import {LocalstorageService} from "../../core/services/localstorage.service";
 
 
 interface User {
@@ -24,7 +26,9 @@ export class LoginComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private loginService: LoginService,
-              public snackbar: MatSnackBar) {
+              private localStorageService: LocalstorageService,
+              public snackbar: MatSnackBar,
+              public dialog: MatDialog,) {
     this.createForm()
   }
 
@@ -46,11 +50,13 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  /**
+   * [We need to ask for the user id as the email is not unique in the DB
+   * For using this endpoint with the email you need to ask also the client id
+   * Please check the behaviour of the system login with user id/email: https://dev.shocklogic.com/v2/unifiedlogin]
+   * */
   onSubmit(){
-    //We need to ask for the user id as the email is not unique in the DB
-    //For using this endpoint with the email you need to ask also the client id
-    //Please check the behaviour of the system login with user id/email 
-    //https://dev.shocklogic.com/v2/unifiedlogin
+    //
     let formData = new FormData();
     formData.append('email', this.loginForm.value.email);
     formData.append('password', this.loginForm.value.password);
@@ -60,6 +66,11 @@ export class LoginComponent implements OnInit {
         if(auxRes.type == 'error'){
           this.openSnackBar(auxRes.message, 'Ok');
           return;
+        }
+        else {
+          this.dialog.closeAll()
+          this.localStorageService.setCurrentItem('userId', auxRes.id)
+          this.localStorageService.setCurrentItem('token', auxRes.token)
         }
       },
       error: (err) => {
