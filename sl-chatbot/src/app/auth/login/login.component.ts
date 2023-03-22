@@ -78,7 +78,4 @@ export class LoginComponent implements OnInit {
       }
     })
   }
-
-  // TODO: for some reason the first time you authenticate it's not doing anything
-
 }
