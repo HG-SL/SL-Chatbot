@@ -130,6 +130,7 @@ export class SupportComponent implements AfterViewInit {
         }
 
       }
+
       // @ts-ignore
       this.questionService.savequestion(this.body, "support").subscribe(({Question_Id, Question_Date, Client_Id}) => {
           let currentQuestion = Question_Id
@@ -256,7 +257,7 @@ export class SupportComponent implements AfterViewInit {
       this.getQualification()
     }
     else if (purpose == 'open_ticket'){
-      this.endSession()
+      this.restartSession()
     }
   }
 }

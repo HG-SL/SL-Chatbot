@@ -167,7 +167,9 @@ export class ChatbotComponent implements OnInit {
   }
 
   sendMessage(event: any){
-    this.sc?.sendMessage(event)
+    if (this.serviceType == 'support'){
+      this.sc?.sendMessage(event)
+    }
   }
 
   setEnabled(enabled: boolean){
@@ -215,12 +217,17 @@ export class ChatbotComponent implements OnInit {
     this.userId = this.localStorageService.getCurrentItem('userId')
 
     // Get user's email in JM_User table
-    // @ts-ignore
-    this.JMUsersService.getEmail(this.userId).subscribe(({email}) => {
-      this.email = email;
+    if (this.userId){
+      // @ts-ignore
+      this.JMUsersService.getEmail(this.userId).subscribe(({email}) => {
+        this.email = email;
+        this.serviceType = 'open_tickets'
+        this.buttonDisabled = true
+      })
+    }
+    else {
       this.serviceType = 'open_tickets'
-      this.buttonDisabled = true
-    })
+    }
   }
 
   /**
@@ -230,6 +237,7 @@ export class ChatbotComponent implements OnInit {
     this.buildMessage({text: 'Hello, how can I help you?', reply: false, type:'button', customMessageData:'Support'}) // Greeting
     this.buttonDisabled = false
     findSpecificItem("how can I", this.messages)
+    this.serviceType = ''
   }
 
   getLicense(){

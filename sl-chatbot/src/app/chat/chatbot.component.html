@@ -126,7 +126,8 @@
                  (setServiceType)="setServiceType($event)"
     ></app-support>
 
-    <app-tickets *ngIf="serviceType == 'open_tickets'" [openTickets]="openTickets" [token]="token" [userId]="userId"
+    <app-tickets *ngIf="serviceType == 'open_tickets'" [openTickets]="openTickets" [token]="token" [email]="email"
+                 [userId]="userId"
                  (buildMessage)="buildMessage($event)"
                  (setOpenTickets)="setOpenTickets($event)"></app-tickets>
 
