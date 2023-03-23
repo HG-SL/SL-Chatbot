@@ -8,7 +8,7 @@ import { NbSecurityModule } from '@nebular/security';
 import { NbThemeModule, NbLayoutModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { HttpClientModule } from '@angular/common/http';
-import {PortalModule} from "@angular/cdk/portal";
+import { PortalModule } from "@angular/cdk/portal";
 
 @NgModule({
     declarations: [

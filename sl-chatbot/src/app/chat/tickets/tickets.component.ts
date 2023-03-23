@@ -1,9 +1,7 @@
 import {Component, Input, OnInit, Output, EventEmitter, ViewChild} from '@angular/core';
 import {TicketsService} from "../../core/services/zendesk/tickets.service";
-import { LoginComponent } from 'src/app/auth/login/login.component';
-import { MatDialog } from '@angular/material/dialog';
-import {LocalstorageService} from "../../core/services/localstorage.service";
-import {getTimeFormat} from "../../core/utils/date.formatting";
+import {LoginComponent} from 'src/app/auth/login/login.component';
+import {MatDialog} from '@angular/material/dialog';
 import {SupportComponent} from "../support/support.component";
 
 @Component({

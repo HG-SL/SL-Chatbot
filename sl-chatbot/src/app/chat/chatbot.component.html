@@ -131,6 +131,8 @@
                  (buildMessage)="buildMessage($event)"
                  (setOpenTickets)="setOpenTickets($event)"></app-tickets>
 
+    <app-license></app-license>
+
     <nb-chat-form *ngIf="enabled" (send)="sendMessage($event)" [dropFiles]="true">
     </nb-chat-form>
 
