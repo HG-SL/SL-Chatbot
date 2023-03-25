@@ -117,7 +117,82 @@
       </button>
     </div>
 
-    <!-- Other messages-->
+    <!-- Select years -->
+    <div *nbCustomMessage="'custom-years-view';">
+      <p class="text-control button-custom-message-text">For how many years would you like to subscribe?</p>
+      <button *ngFor="let y of yearList" class="mt-10" mat-button nbButton status="control" (click)="lc?.setYears(y.value)">
+        {{y.years}}
+      </button>
+      <button class="mt-10" mat-button nbButton (click)="lc?.showProductPreferencesForm(this.product)">
+        Back
+      </button>
+    </div>
+
+    <!-- Select records -->
+    <div *nbCustomMessage="'custom-records-view';">
+      <p class="text-control button-custom-message-text">How many records do you plan to store?</p>
+      <button *ngFor="let r of recordList" class="mt-10" mat-button nbButton status="control" (click)="lc?.setRecords(r.value)">
+        {{r.records}}
+      </button>
+      <button class="mt-10" mat-button nbButton (click)="lc?.showYearsForm()">
+        Back
+      </button>
+    </div>
+
+    <!-- Select projects -->
+    <div *nbCustomMessage="'custom-projects-view';">
+      <p class="text-control button-custom-message-text">For how many projects do you plan to use this software?</p>
+      <button *ngFor="let p of projectList" class="mt-10" mat-button nbButton status="control" (click)="lc?.setProjects(p.value)">
+        {{p.projects}}
+      </button>
+      <button class="mt-10" mat-button nbButton *ngIf="flatFee != 6750" (click)="lc?.showRecordsFeeForm()">
+        Back
+      </button>
+
+      <button class="mt-10" mat-button nbButton *ngIf="flatFee == 6750" (click)="lc?.showYearsForm()">
+        Back
+      </button>
+    </div>
+
+    <!-- Select forms -->
+    <div *nbCustomMessage="'custom-forms-view';">
+      <p class="text-control button-custom-message-text">How many registration forms will be set up?</p>
+      <button *ngFor="let f of formList" class="mt-10" mat-button nbButton status="control" (click)="lc?.setForms(f.value)">
+        {{f.forms}}
+      </button>
+      <button class="mt-10" mat-button nbButton (click)="lc?.showProjectsFeeForm()">
+        Back
+      </button>
+    </div>
+
+    <!-- Select members -->
+    <div *nbCustomMessage="'custom-members-view';">
+      <p class="text-control button-custom-message-text">How many members/devices will take part?</p>
+      <button *ngFor="let m of memberList" class="mt-10" mat-button nbButton status="control" (click)="lc?.setMembers(m.value)">
+        {{m.members}}
+      </button>
+      <button class="mt-10" mat-button nbButton (click)="lc?.showYearsForm()">
+        Back
+      </button>
+    </div>
+
+    <!-- Select options -->
+    <div *nbCustomMessage="'custom-options-view';">
+      <p class="text-control button-custom-message-text">Which option would you prefer?</p>
+      <button class="mt-10" mat-button nbButton status="control" (click)="lc?.setOption(1)">
+        Option 1 - App download
+      </button>
+      <button class="mt-10" mat-button nbButton status="control" (click)="lc?.setOption(2)">
+        Option 2 - With equipment
+      </button>
+      <button class="mt-10" mat-button nbButton (click)="lc?.showYearsForm()">
+        Back
+      </button>
+    </div>
+
+
+
+      <!-- Other messages-->
     <nb-chat-message *ngFor="let msg of messages"
                      [type]="msg.type"
                      [message]="msg.text"
@@ -147,6 +222,7 @@
     <app-license *ngIf="serviceType == 'buy_license'"
                  (buildMessage)="buildMessage($event)"
                  (setProducts)="setProducts($event)"
+                 (setFlatFeeOut)="setFlatFee($event)"
                  (setFlatFeesParent)="setFlatFees($event)"></app-license>
 
     <nb-chat-form *ngIf="enabled" (send)="sendMessage($event)" [dropFiles]="true">

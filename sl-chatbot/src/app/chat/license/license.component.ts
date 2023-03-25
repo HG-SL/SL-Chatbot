@@ -12,6 +12,7 @@ export class LicenseComponent implements OnInit {
   // Parent's component interaction
   @Output() buildMessage = new EventEmitter<any>();
   @Output() setProducts = new EventEmitter<any>();
+  @Output() setFlatFeeOut = new EventEmitter<any>();
   @Output() setFlatFeesParent = new EventEmitter<any>();
 
   // Products
@@ -20,6 +21,14 @@ export class LicenseComponent implements OnInit {
   // Product preferences
   flatFees: any = []
   flatFee: any;
+  years: any = 0;
+  records: any = 0;
+  projects: any = 0;
+  forms: any = 0;
+  members: any = 0;
+  option: any = 0;
+
+  result:any = {}
 
   constructor(private productsService: ProductsService) { }
 
@@ -46,7 +55,6 @@ export class LicenseComponent implements OnInit {
   getFlatFees(productId: number){
     // @ts-ignore
     this.productsService.getFlatFees(productId).subscribe(({fees}) => {
-      console.log(fees)
       this.flatFees = fees
       this.setFlatFeesParent.emit(fees)
     })
@@ -70,6 +78,9 @@ export class LicenseComponent implements OnInit {
     if (product.Product_Id == 2){
       this.showFlatFeeForm(product)
     }
+    else if (product.Product_Id == 6 || product.Product_Id == 1){
+      this.showYearsForm()
+    }
   }
 
   showFlatFeeForm(product: any){
@@ -78,10 +89,138 @@ export class LicenseComponent implements OnInit {
       this.getFlatFees(product.Product_Id)
       this.buildMessage.emit({reply: false, type: 'custom-flat-fee-view'})
     }
+    else if (product.Product_Id == 6 || product.Product_Id == 1){
+      this.showYearsForm()
+    }
+  }
+
+  showMembersForm(){
+    this.buildMessage.emit({reply: false, type: 'custom-members-view'})
+  }
+
+  showYearsForm(){
+    this.buildMessage.emit({reply: false, type: 'custom-years-view'})
+  }
+
+  showRecordsFeeForm(){
+    this.buildMessage.emit({reply: false, type: 'custom-records-view'})
+  }
+
+  showProjectsFeeForm(){
+    this.buildMessage.emit({reply: false, type: 'custom-projects-view'})
+  }
+
+  showRegistrationForm(){
+    this.buildMessage.emit({reply: false, type: 'custom-forms-view'})
+  }
+
+  showOptionsForm(){
+    this.buildMessage.emit({reply: false, type: 'custom-options-view'})
+  }
+
+  showSubTotalPrice(result: any){
+    let text = ""
+    if (result.tbc_value_exists == true){
+      text = "The estimate price is " + result.final_price.toString() + ". Keep in mind that this does not include the " +
+        "actual prices of " + result.tbc_value.toString()
+    }
+    else {
+      text = "The estimate price is " + result.final_price.toString()
+    }
+    this.buildMessage.emit({text: text,
+      reply: false})
   }
 
   setFlatFee(flatFee: any){
     this.flatFee = Number(flatFee.replace(/[^0-9.-]+/g,""))
+    if (this.product.Product_Id == 2){
+      this.showYearsForm()
+    }
+    this.setFlatFeeOut.emit(this.flatFee)
+  }
+
+  setYears(years: any){
+    this.years = years
+    // In participantlogic there's no record fee if the annual fee is 6K
+    if (this.product.Product_Id == 2 && this.flatFee != 6750){
+      this.showRecordsFeeForm()
+    }
+    else if (this.product.Product_Id == 2 && this.flatFee == 6750){
+      this.showProjectsFeeForm()
+    }
+    else if (this.product.Product_Id == 6){
+      this.showMembersForm()
+    }
+    else if (this.product.Product_Id == 1){
+      this.showOptionsForm()
+    }
+  }
+
+  setRecords(records: any){
+    this.records = records
+    if (this.product.Product_Id == 2){
+      this.showProjectsFeeForm()
+    }
+  }
+
+  setProjects(projects: any){
+    this.projects = projects
+    if (this.product.Product_Id == 2){
+      this.showRegistrationForm()
+    }
+  }
+
+  setMembers(members: any){
+    this.members = members
+    if (this.product.Product_Id == 6){
+      let data = {
+        "Product": this.product.Product_Name,
+        "Years": this.years,
+        "Members": this.members
+      }
+      this.productsService.calculatePrice(data).subscribe((res) => {
+        this.result = res;
+        this.showSubTotalPrice(this.result)
+      })
+    }
+    else if (this.product.Product_Id == 1){
+      let data = {
+        "Product": this.product.Product_Name,
+        "Years": this.years,
+        "Devices": this.members,
+        "Option": this.option
+      }
+        this.productsService.calculatePrice(data).subscribe((res) => {
+        this.result = res;
+        this.showSubTotalPrice(this.result)
+      })
+    }
+  }
+
+  setOption(option: any){
+    this.option = option
+    if (this.product.Product_Id == 1){
+      this.showMembersForm()
+    }
+  }
+
+  setForms(forms: any){
+    this.forms = forms
+
+    if (this.product.Product_Id == 2){
+      let data = {
+        "Product": this.product.Product_Name,
+        "Years": this.years,
+        "Flat": this.flatFee,
+        "Records": this.records,
+        "Projects": this.projects,
+        "Forms": this.forms
+      }
+      this.productsService.calculatePrice(data).subscribe((res) => {
+        this.result = res;
+        this.showSubTotalPrice(this.result)
+      })
+    }
   }
 
 }

@@ -38,9 +38,40 @@ export class ChatbotComponent implements OnInit {
 
   // Products
   products:any = []
+  product:any;
 
   // Fees
   flatFees:any = []
+  yearList: any = [
+    {"years": "1 year", "value": 1},
+    {"years": "2 years", "value": 2},
+    {"years": "More than 2 years", "value": "TBC"}
+  ]
+
+  // Estimates
+  recordList: any = [
+    {"records": "0-100", "value": 50},
+    {"records": "101-200", "value": 150},
+    {"records": "201-3999", "value": 2000},
+    {"records": "4000+", "value": 4000}
+  ]
+  projectList: any = [
+    {"projects": "0-100", "value": 50},
+    {"projects": "101-200", "value": 150},
+    {"projects": "200-3999", "value": 500}
+  ]
+  formList: any = [
+    {"forms": "No forms", value: 0},
+    {"forms": "1 form", "value": 1},
+    {"forms": "2 forms", "value": 2},
+    {"forms": "3 forms", "value": 3},
+    {"forms": "More than 3", "value": "TBC"}
+  ]
+  memberList: any = [
+    {"members": "1-100", "value": 50},
+    {"members": "101-200", "value": 150},
+    {"members": "201+", "value": 201}
+  ]
 
   // User data
   location:any = {}
@@ -66,6 +97,9 @@ export class ChatbotComponent implements OnInit {
   openTickets: any = [];
 
   messages: any[] = []
+
+  // Prefs
+  flatFee: any = 0;
 
 
   constructor(
@@ -209,6 +243,10 @@ export class ChatbotComponent implements OnInit {
     this.flatFees = flatFees
   }
 
+  setFlatFee(flatFee: any){
+    this.flatFee = flatFee
+  }
+
   /**
    * [Start user's support flow]
    * */
@@ -260,6 +298,7 @@ export class ChatbotComponent implements OnInit {
    * [Product selection event]
    * */
   selectProduct(product: any){
+    this.product = product
     if (this.serviceType == 'support'){
       this.sc?.selectProduct(product)
     }

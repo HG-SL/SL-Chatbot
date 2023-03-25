@@ -13,4 +13,8 @@ export class ProductsService extends ApiService{
   getFlatFees(product: number){
     return this.http.get(this.API_URL+'get-flat-fee/'+product, this.httpOptions)
   }
+
+  calculatePrice(data: any){
+    return this.http.post(this.API_URL + 'get-price', data, this.httpOptions)
+  }
 }
