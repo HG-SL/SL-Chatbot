@@ -209,6 +209,9 @@ export class ChatbotComponent implements OnInit {
     if (this.serviceType == 'support'){
       this.sc?.sendMessage(event)
     }
+    else if (this.serviceType == 'buy_license'){
+      this.lc?.sendMessage(event)
+    }
   }
 
   setEnabled(enabled: boolean){

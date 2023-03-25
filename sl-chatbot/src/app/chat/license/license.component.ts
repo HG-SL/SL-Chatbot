@@ -14,6 +14,7 @@ export class LicenseComponent implements OnInit {
   @Output() setProducts = new EventEmitter<any>();
   @Output() setFlatFeeOut = new EventEmitter<any>();
   @Output() setFlatFeesParent = new EventEmitter<any>();
+  @Output() enable = new EventEmitter<any>();
 
   // Products
   product:any = {}
@@ -27,6 +28,7 @@ export class LicenseComponent implements OnInit {
   forms: any = 0;
   members: any = 0;
   option: any = 0;
+  floorplans: any = 0;
 
   result:any = {}
 
@@ -78,8 +80,11 @@ export class LicenseComponent implements OnInit {
     if (product.Product_Id == 2){
       this.showFlatFeeForm(product)
     }
-    else if (product.Product_Id == 6 || product.Product_Id == 1){
+    else if (product.Product_Id == 6 || product.Product_Id == 1 || product.Product_Id == 7){
       this.showYearsForm()
+    }
+    else if (product.Product_Id == 8){
+      this.showOptionsForm()
     }
   }
 
@@ -118,6 +123,10 @@ export class LicenseComponent implements OnInit {
     this.buildMessage.emit({reply: false, type: 'custom-options-view'})
   }
 
+  showTrainingForm(){
+    this.buildMessage.emit({reply: false, type: 'custom-training-view'})
+  }
+
   showSubTotalPrice(result: any){
     let text = ""
     if (result.tbc_value_exists == true){
@@ -148,7 +157,7 @@ export class LicenseComponent implements OnInit {
     else if (this.product.Product_Id == 2 && this.flatFee == 6750){
       this.showProjectsFeeForm()
     }
-    else if (this.product.Product_Id == 6){
+    else if (this.product.Product_Id == 6 || this.product.Product_Id == 8 || this.product.Product_Id == 7){
       this.showMembersForm()
     }
     else if (this.product.Product_Id == 1){
@@ -195,11 +204,27 @@ export class LicenseComponent implements OnInit {
         this.showSubTotalPrice(this.result)
       })
     }
+    else if (this.product.Product_Id == 8){
+      let data = {
+        "Product": this.product.Product_Name,
+        "Option": this.option,
+        "Devices": this.members,
+        "Members": this.members
+      }
+
+      this.productsService.calculatePrice(data).subscribe((res) => {
+        this.result = res;
+        this.showSubTotalPrice(this.result)
+      })
+    }
+    else if (this.product.Product_Id == 7){
+      this.showTrainingForm()
+    }
   }
 
   setOption(option: any){
     this.option = option
-    if (this.product.Product_Id == 1){
+    if ((this.product.Product_Id == 1) || (this.product.Product_Id == 8)){
       this.showMembersForm()
     }
   }
@@ -220,6 +245,37 @@ export class LicenseComponent implements OnInit {
         this.result = res;
         this.showSubTotalPrice(this.result)
       })
+    }
+
+    else if (this.product.Product_Id == 7){
+      this.enable.emit(true)
+      this.buildMessage.emit({text:"How many floorplans do you need? Type 0 if you do not need any", reply:false})
+    }
+  }
+
+  setFloorplans(floorplans: any){
+    this.floorplans = floorplans
+    let data = {
+      "Product": this.product.Product_Name,
+      "Years": this.years,
+      "Members": this.members,
+      "Forms": this.forms,
+      "Floorplans": parseInt(this.floorplans)
+    }
+    this.productsService.calculatePrice(data).subscribe((res) => {
+      this.result = res;
+      this.showSubTotalPrice(this.result)
+    })
+  }
+
+  sendMessage(event: any){
+    this.buildMessage.emit({text:event.message, reply:true})
+    if (isNaN(event.message)){
+      this.buildMessage.emit({text:"Floorplans must have a numeric value. Please try again"})
+    }
+    else {
+      this.enable.emit(false)
+      this.setFloorplans(event.message)
     }
   }
 

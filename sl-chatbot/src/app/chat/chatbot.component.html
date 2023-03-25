@@ -165,9 +165,28 @@
       </button>
     </div>
 
+    <!-- Training fee -->
+    <div *nbCustomMessage="'custom-training-view';">
+      <p class="text-control button-custom-message-text">Is training required?</p>
+      <button class="mt-10" mat-button nbButton status="control" (click)="lc?.setForms(true)">
+        Yes
+      </button>
+      <button class="mt-10" mat-button nbButton status="control" (click)="lc?.setForms(false)">
+        No
+      </button>
+      <button class="mt-10" mat-button nbButton (click)="lc?.showProjectsFeeForm()" *ngIf="product.Product_Id != 7">
+        Back
+      </button>
+      <button class="mt-10" mat-button nbButton (click)="lc?.showMembersForm()" *ngIf="product.Product_Id == 7">
+        Back
+      </button>
+    </div>
+
     <!-- Select members -->
     <div *nbCustomMessage="'custom-members-view';">
-      <p class="text-control button-custom-message-text">How many members/devices will take part?</p>
+      <p *ngIf="product.Product_Id != 8" class="text-control button-custom-message-text">How many members/devices will take part?</p>
+      <p *ngIf="product.Product_Id == 8" class="text-control button-custom-message-text">How many downloads or devices will be used for the whole event?</p>
+
       <button *ngFor="let m of memberList" class="mt-10" mat-button nbButton status="control" (click)="lc?.setMembers(m.value)">
         {{m.members}}
       </button>
@@ -179,13 +198,22 @@
     <!-- Select options -->
     <div *nbCustomMessage="'custom-options-view';">
       <p class="text-control button-custom-message-text">Which option would you prefer?</p>
-      <button class="mt-10" mat-button nbButton status="control" (click)="lc?.setOption(1)">
+      <button class="mt-10" mat-button nbButton status="control" *ngIf="product.Product_Id == 1" (click)="lc?.setOption(1)">
         Option 1 - App download
       </button>
-      <button class="mt-10" mat-button nbButton status="control" (click)="lc?.setOption(2)">
+      <button class="mt-10" mat-button nbButton status="control" *ngIf="product.Product_Id == 8" (click)="lc?.setOption(1)">
+        Option 1 - App
+      </button>
+      <button class="mt-10" mat-button nbButton status="control" *ngIf="product.Product_Id == 1" (click)="lc?.setOption(2)">
         Option 2 - With equipment
       </button>
-      <button class="mt-10" mat-button nbButton (click)="lc?.showYearsForm()">
+      <button class="mt-10" mat-button nbButton status="control" *ngIf="product.Product_Id == 8" (click)="lc?.setOption(2)">
+        Option 2 - App with device
+      </button>
+      <button class="mt-10" mat-button nbButton *ngIf="product.Product_Id == 1" (click)="lc?.showYearsForm()">
+        Back
+      </button>
+      <button class="mt-10" mat-button nbButton *ngIf="product.Product_Id == 8" (click)="lc?.showProductPreferencesForm(product)">
         Back
       </button>
     </div>
@@ -220,6 +248,7 @@
                  (setOpenTickets)="setOpenTickets($event)"></app-tickets>
 
     <app-license *ngIf="serviceType == 'buy_license'"
+                 (enable)="setEnabled($event)"
                  (buildMessage)="buildMessage($event)"
                  (setProducts)="setProducts($event)"
                  (setFlatFeeOut)="setFlatFee($event)"
