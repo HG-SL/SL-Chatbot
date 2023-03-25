@@ -21,9 +21,10 @@
 
     <!-- Product selector-->
     <div *nbCustomMessage="'custom-products-msg'; let data">
-      <p class="text-control button-custom-message-text">Please select the product you have any questions about</p>
+      <p class="text-control button-custom-message-text" *ngIf="serviceType == 'support'">Please select the product you have any questions about</p>
+      <p class="text-control button-custom-message-text" *ngIf="serviceType == 'buy_license'">Select the product of your interest</p>
       <mat-chip-list #chipList>
-        <mat-chip *ngFor="let product of products" [removable]="removable" (click)="sc?.selectProduct(product)">
+        <mat-chip *ngFor="let product of products" [removable]="removable" (click)="selectProduct(product)">
           {{product.Product_Name}}
         </mat-chip>
       </mat-chip-list>
@@ -104,6 +105,18 @@
       </button>
     </div>
 
+
+    <!-- Select flat fee -->
+    <div *nbCustomMessage="'custom-flat-fee-view';">
+      <p class="text-control button-custom-message-text">Select the annual plan you prefer. Keep in mind that the annual plan of higher amount does not charge additional fees per record</p>
+      <button *ngFor="let fee of flatFees" class="mt-10" mat-button nbButton status="control" (click)="lc?.setFlatFee(fee)">
+        {{fee}}
+      </button>
+      <button class="mt-10" mat-button nbButton (click)="lc?.getProducts()">
+        Back
+      </button>
+    </div>
+
     <!-- Other messages-->
     <nb-chat-message *ngFor="let msg of messages"
                      [type]="msg.type"
@@ -131,7 +144,10 @@
                  (buildMessage)="buildMessage($event)"
                  (setOpenTickets)="setOpenTickets($event)"></app-tickets>
 
-    <app-license></app-license>
+    <app-license *ngIf="serviceType == 'buy_license'"
+                 (buildMessage)="buildMessage($event)"
+                 (setProducts)="setProducts($event)"
+                 (setFlatFeesParent)="setFlatFees($event)"></app-license>
 
     <nb-chat-form *ngIf="enabled" (send)="sendMessage($event)" [dropFiles]="true">
     </nb-chat-form>

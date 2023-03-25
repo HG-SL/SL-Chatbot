@@ -14,6 +14,7 @@ import {LoginComponent} from "../auth/login/login.component";
 import {Router} from "@angular/router";
 import {findSpecificItem} from "../core/utils/array.helper";
 import {JMusersService} from "../core/services/v2/jmusers.service";
+import {LicenseComponent} from "./license/license.component";
 
 @Component({
   selector: 'app-pages',
@@ -24,6 +25,7 @@ import {JMusersService} from "../core/services/v2/jmusers.service";
 export class ChatbotComponent implements OnInit {
   @ViewChild(SupportComponent) public sc: SupportComponent | undefined;
   @ViewChild(TicketsComponent) public tc: TicketsComponent | undefined;
+  @ViewChild(LicenseComponent) public lc: LicenseComponent | undefined;
 
   loading = false;
 
@@ -36,6 +38,9 @@ export class ChatbotComponent implements OnInit {
 
   // Products
   products:any = []
+
+  // Fees
+  flatFees:any = []
 
   // User data
   location:any = {}
@@ -200,6 +205,10 @@ export class ChatbotComponent implements OnInit {
     this.serviceType = serviceType
   }
 
+  setFlatFees(flatFees: any){
+    this.flatFees = flatFees
+  }
+
   /**
    * [Start user's support flow]
    * */
@@ -240,7 +249,22 @@ export class ChatbotComponent implements OnInit {
     this.serviceType = ''
   }
 
+  /**
+   * [Buy license]
+   * */
   getLicense(){
+    this.serviceType = 'buy_license'
+  }
 
+  /**
+   * [Product selection event]
+   * */
+  selectProduct(product: any){
+    if (this.serviceType == 'support'){
+      this.sc?.selectProduct(product)
+    }
+    else if (this.serviceType == 'buy_license'){
+      this.lc?.selectProduct(product)
+    }
   }
 }
