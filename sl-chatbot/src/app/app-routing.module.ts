@@ -4,11 +4,11 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'pages',
+    redirectTo: 'init',
     pathMatch: 'full'
   },
   {
-    path: 'pages',
+    path: 'init',
     loadChildren: () => import('./chat/chatbot.module').then(m => m.ChatbotModule)
   }
 ];

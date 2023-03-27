@@ -1,12 +1,13 @@
 {
-  "name": "sl-chatbot",
+  "name": "@shocklogic/sl-chatbot",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "bundle": "ng build --output-hashing none && node concat.js"
   },
   "private": true,
   "dependencies": {
@@ -15,6 +16,7 @@
     "@angular/common": "~12.2.0",
     "@angular/compiler": "~12.2.0",
     "@angular/core": "~12.2.0",
+    "@angular/elements": "^12.2.16",
     "@angular/flex-layout": "^12.0.0-beta.35",
     "@angular/forms": "~12.2.0",
     "@angular/material": "^12.2.13",
@@ -24,6 +26,8 @@
     "@nebular/eva-icons": "8.0.0",
     "@nebular/security": "^8.0.0",
     "@nebular/theme": "^8.0.0",
+    "concat": "^1.0.3",
+    "document-register-element": "^1.7.2",
     "eva-icons": "^1.1.2",
     "ngx-avatar": "^4.1.0",
     "rxjs": "~6.6.0",
@@ -44,5 +48,21 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
     "typescript": "~4.3.5"
-  }
+  },
+  "description": "<!-- PROJECT LOGO -->\r <br />\r <div align=\"center\">\r   <a href=\"https://theme.zdassets.com/theme_assets/1299963/42d732715e6bb358b56da2f15f476f6811138b40.png\">\r     <img src=\"https://theme.zdassets.com/theme_assets/1299963/42d732715e6bb358b56da2f15f476f6811138b40.png\" alt=\"Logo\" width=\"80\" height=\"80\">\r   </a>",
+  "main": "concat.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HG-SL/SL-Chatbot.git"
+  },
+  "keywords": [
+    "chatbot",
+    "shocklogic"
+  ],
+  "author": "Hilery Guedez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HG-SL/SL-Chatbot/issues"
+  },
+  "homepage": "https://github.com/HG-SL/SL-Chatbot#readme"
 }

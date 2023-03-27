@@ -1,6 +1,7 @@
-import { NgModule } from '@angular/core';
+import { Injector,NgModule } from '@angular/core';
+// import createCustomElement
+import { createCustomElement } from '@angular/elements';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -28,6 +29,15 @@ import { PortalModule } from "@angular/cdk/portal";
     providers: [],
     exports: [
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    entryComponents: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+    constructor(private injector: Injector){}
+
+    ngDoBootstrap(){
+        const element = createCustomElement(AppComponent, {injector: this.injector});
+        // Here you define your new tag shiny-app-a
+        customElements.define('app-micro-fe', element);
+    }
+}
