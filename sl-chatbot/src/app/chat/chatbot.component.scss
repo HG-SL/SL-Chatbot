@@ -1,0 +1,45 @@
+$shocklogic-orange: #FF6E0B;
+
+::ng-deep nb-layout-column {
+  justify-content: center;
+  display: flex;
+}
+nb-chat {
+  width: 350px;
+  height: 400px;
+}
+
+button{
+  color: black;
+  background: white;
+  width: 100%;
+}
+
+mt-5 {
+  margin-top: 5px;
+}
+
+.mt-10{
+  margin-top: 10px;
+}
+
+.mt-10-n {
+  margin-top: -10px;
+}
+
+mat-chip{
+  cursor: pointer;
+}
+
+.text-control-small {
+  font-size: 13px;
+  color: white;
+}
+
+small {
+  font-size: 10px;
+}
+
+.ticket-list {
+  word-wrap: break-word;
+}

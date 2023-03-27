@@ -1,0 +1,33 @@
+<div id="login-container" class="container center">
+  <div fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex fxFlexAlign="center">
+
+      <div fxFlex class="login-col">
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <div fxFlex>
+            <br><br>
+            <img src="assets/img/1200x600.png" width="220">
+          </div>
+
+          <form [formGroup]="loginForm" fxLayout="column" fxLayoutAlign="center center" fxFill>
+            <mat-form-field fxFlex class="fill mb-50" appearance="outline">
+              <mat-label class="custom-label">Username</mat-label>
+              <input matInput formControlName="email" class="form-control">
+            </mat-form-field>
+
+            <mat-form-field fxFlex class="fill mb-50" appearance="outline">
+              <mat-label class="custom-label">Password </mat-label>
+              <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="password" class="form-control">
+              <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+            </mat-form-field>
+            <button mat-flat-button color="primary" [disabled]="!loginForm.valid " (click)="onSubmit()">Login</button>
+          </form>
+          <br><br><br>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
