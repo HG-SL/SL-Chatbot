@@ -126,7 +126,7 @@ export class SupportComponent implements AfterViewInit {
         Question: {
           Description: event.message,
           Question_Date: getTimeFormat(),
-          Question_Type: "Failure"
+          Channel: "Webpage"
         }
 
       }
