@@ -220,10 +220,18 @@ export class SupportComponent implements AfterViewInit {
    * */
   openZendeskTicket(){
     let href = "https://shocklogic.zendesk.com/hc/en-us/requests/new"
-    this.buildMessage.emit({text: '', reply: false, type: 'link',
-      customMessageData: {href: href, text: "Click here to open a support ticket"}})
+    this.questionService.requestTicket(this.currentAnswer.question_id)
+    .subscribe(
+      res => {
+        this.buildMessage.emit({text: '', reply: false, type: 'link',
+        customMessageData: {href: href, text: "Click here to open a support ticket"}})
 
-    this.setPurpose.emit('open_ticket')
+        this.setPurpose.emit('open_ticket')
+      },
+      err => {
+        console.log(err)
+      }
+    )
   }
 
 
