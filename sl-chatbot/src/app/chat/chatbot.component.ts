@@ -50,13 +50,13 @@ export class ChatbotComponent implements OnInit {
 
   // Estimates
   recordList: any = [
-    {"records": "0-100", "value": 50},
+    {"records": "1-100", "value": 50},
     {"records": "101-200", "value": 150},
     {"records": "201-3999", "value": 2000},
     {"records": "4000+", "value": 4000}
   ]
   projectList: any = [
-    {"projects": "0-100", "value": 50},
+    {"projects": "1-100", "value": 50},
     {"projects": "101-200", "value": 150},
     {"projects": "200-3999", "value": 500}
   ]
@@ -310,3 +310,5 @@ export class ChatbotComponent implements OnInit {
     }
   }
 }
+
+// TODO: For projects we have to ask how many projects are planned to be used: 1, 2 or more than 2 (TBC)

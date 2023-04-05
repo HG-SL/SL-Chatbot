@@ -108,7 +108,7 @@
 
     <!-- Select flat fee -->
     <div *nbCustomMessage="'custom-flat-fee-view';">
-      <p class="text-control button-custom-message-text">Select the annual plan you prefer. Keep in mind that the annual plan of higher amount does not charge additional fees per record</p>
+      <p class="text-control button-custom-message-text">Select the annual plan you prefer. Bear in mind that the annual plan of higher amount does not charge additional fees per record</p>
       <button *ngFor="let fee of flatFees" class="mt-10" mat-button nbButton status="control" (click)="lc?.setFlatFee(fee)">
         {{fee}}
       </button>
