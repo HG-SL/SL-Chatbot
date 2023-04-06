@@ -243,7 +243,15 @@ export class SupportComponent implements AfterViewInit {
    * [Farewell message to the user]
    * */
   endSession(){
-    this.buildMessage.emit({text: 'Have a good day!', reply: false, type: 'text', customMessageData: 'Support'})
+    this.questionService.completeSession(this.currentAnswer.question_id)
+    .subscribe(
+      res => {
+        this.buildMessage.emit({text: 'Have a good day!', reply: false, type: 'text', customMessageData: 'Support'})
+      },
+      err => {
+        console.log(err)
+      }
+    )
   }
 
   /**
