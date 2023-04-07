@@ -3,6 +3,7 @@ import {ProductsService} from "../../core/services/products.service";
 import {max} from "rxjs/operators";
 import {LocalstorageService} from "../../core/services/localstorage.service";
 import {getTimeFormat} from "../../core/utils/date.formatting";
+import {checkingInputEmail} from "../../core/utils/regex.helper";
 
 @Component({
   selector: 'app-license',
@@ -18,7 +19,7 @@ export class LicenseComponent implements AfterViewInit {
   @Output() setFlatFeesParent = new EventEmitter<any>();
   @Output() enable = new EventEmitter<any>();
   @Output() saveEmail = new EventEmitter<any>();
-  @Input() emailFlag: boolean | undefined;
+  @Input() emailFlag: any | undefined;
   @Input() email: string | undefined;
   @Input() location: any | undefined;
   // Products
@@ -42,7 +43,7 @@ export class LicenseComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.buildMessage.emit({text:'License', reply:true})
-    if (!this.emailFlag){
+    if (this.emailFlag){
       this.getProducts()
     }
     else {
@@ -297,8 +298,9 @@ export class LicenseComponent implements AfterViewInit {
 
   sendMessage(event: any){
     this.buildMessage.emit({text:event.message, reply:true})
-    if(this.emailFlag){
-      this.saveEmail.emit(event.message)
+    if(!this.emailFlag){
+      if(checkingInputEmail(event.message))this.saveEmail.emit(event.message)
+      else this.buildMessage.emit({text:"Please introduce a valid email"})
     }
     else if(!this.emailFlag && this.email != ''){
       if (isNaN(event.message)){

@@ -77,7 +77,7 @@ export class ChatbotComponent implements OnInit {
   location:any = {}
   userId:any = '';
   userIdFlag:boolean = false;
-  emailFlag:boolean = false;
+  emailFlag:any = "";
   canScheduleMeetings:boolean = false;
   token:string | null = '';
   email:any = '';
@@ -120,14 +120,12 @@ export class ChatbotComponent implements OnInit {
 
     // Ask for user's ID if it's the first time the user visits the page
     let firstInteraction = this.localStorageService.getCurrentItem('userIdFlag');
-
+    this.emailFlag = this.localStorageService.getCurrentItem('userId');
     if (firstInteraction == null || firstInteraction == "true") {
       this.userIdFlag = true;
-      this.emailFlag = true;
     }
     else {
       this.userIdFlag = false;
-      this.emailFlag = false;
       // Get stored userId
       let uId = this.localStorageService.getCurrentItem('userId')
       this.userId = uId != null ? uId : '';
@@ -219,7 +217,6 @@ export class ChatbotComponent implements OnInit {
           // If the ID is valid, ask the user which product they need help with
           if(auxRes.result != 'error'){
             this.email = email
-            this.localStorageService.setCurrentItem('buy_license_email', email)
             if(this.serviceType == 'buy_license'){
               this.lc?.getProducts()
             }
@@ -324,6 +321,7 @@ export class ChatbotComponent implements OnInit {
     this.serviceType = 'buy_license'
     this.buttonDisabled = true
     this.enabled = true
+    this.emailFlag = this.localStorageService.getCurrentItem('userId')
   }
 
   /**
