@@ -116,11 +116,17 @@ export class ChatbotComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLocation() // Get IP address
-    this.buildMessage({text: 'Hello, how can I help you?', reply: false, type:'button', customMessageData:'Support'}) // Greeting
+    this.buildMessage({
+      text: 'Hello, how can I help you?',
+      reply: false,
+      type:'button',
+      customMessageData:'Support'
+    }) // Greeting
 
     // Ask for user's ID if it's the first time the user visits the page
     let firstInteraction = this.localStorageService.getCurrentItem('userIdFlag');
     this.emailFlag = this.localStorageService.getCurrentItem('userId');
+
     if (firstInteraction == null || firstInteraction == "true") {
       this.userIdFlag = true;
     }
@@ -129,6 +135,11 @@ export class ChatbotComponent implements OnInit {
       // Get stored userId
       let uId = this.localStorageService.getCurrentItem('userId')
       this.userId = uId != null ? uId : '';
+    }
+
+    // Email flag for potential customers
+    if (firstInteraction == null && this.emailFlag == null){
+      this.emailFlag = true;
     }
   }
 
@@ -321,7 +332,6 @@ export class ChatbotComponent implements OnInit {
     this.serviceType = 'buy_license'
     this.buttonDisabled = true
     this.enabled = true
-    this.emailFlag = this.localStorageService.getCurrentItem('userId')
   }
 
   /**

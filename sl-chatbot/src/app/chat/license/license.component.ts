@@ -35,6 +35,69 @@ export class LicenseComponent implements AfterViewInit {
   members: any = 0;
   option: any = 0;
   floorplans: any = 0;
+  days: any = 0;
+
+  // Onsitelogic
+  onsitelogic: any = false;
+  onsitelogicDays: any = false;
+
+  // Onsitelogic items
+  items: any = [
+    'laptop or tablet',
+    'tablet stand/holder',
+    'monitor',
+    'wired PC mouse',
+    'external USB port',
+    'laser printer - laser black & white',
+    'laser printer - ink colour',
+    'thermal printer - colour',
+    'colour badge printer - Epson c3500',
+    'extra ink cartridge for the colour badge printer (Epson c3500)',
+    'desk barcode/QR-code scanners',
+    'plastic cards printer (hire)',
+    'self check-in kiosk (hire)',
+    'network & equipment (Routers, access points, antenna and antenna bases)',
+    'badge paper for laser printer (A6 and double sided)',
+    'contingency badge paper for laser printer (A6 and double sided)',
+    'plastic badge holders (A6 with perforations in middle and at both ends)',
+    'contingency plastic badge holders (A6 with perforations in middle and at both ends)',
+    'butterfly badge paper for laser printer',
+    'contingency butterfly badge paper for laser printer',
+    'plastic cards A7/credit card size',
+    'contingency plastic cards A7/credit card size',
+    'badge paper for thermal printer',
+    'contingency badge paper for thermal printer',
+    'branded lanyards']
+
+  selected_items: any = {
+    "lts": 0,
+    "tsh": 0,
+    "mon": 0,
+    "wm": 0,
+    "eusb": 0,
+    "lp": 0,
+    "lpi": 0,
+    "tp": 0,
+    "cb": 0,
+    "ei": 0,
+    "db": 0,
+    "pcp": 0,
+    "sck": 0,
+    "ntw": 0,
+    "bp": 0,
+    "cbp": 0,
+    "pb": 0,
+    "cpb": 0,
+    "bplp": 0,
+    "cbplp": 0,
+    "pca": 0,
+    "cpca": 0,
+    "bptp": 0,
+    "cbptp": 0,
+    "bly": 0
+  }
+
+  current_item_index = 0;
 
   result:any = {}
 
@@ -43,7 +106,7 @@ export class LicenseComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.buildMessage.emit({text:'License', reply:true})
-    if (this.emailFlag){
+    if (!this.emailFlag){
       this.getProducts()
     }
     else {
@@ -98,7 +161,7 @@ export class LicenseComponent implements AfterViewInit {
     if (product.Product_Id == 2 || product.Product_Id == 4){
       this.showFlatFeeForm(product)
     }
-    else if (product.Product_Id == 6 || product.Product_Id == 1 || product.Product_Id == 7){
+    else if (product.Product_Id == 6 || product.Product_Id == 1 || product.Product_Id == 7 || product.Product_Id == 9){
       this.showYearsForm()
     }
     else if (product.Product_Id == 8){
@@ -148,6 +211,11 @@ export class LicenseComponent implements AfterViewInit {
     this.buildMessage.emit({reply: false, type: 'custom-training-view'})
   }
 
+  showHireForm(index: number){
+    let text = 'How many items of ' + this.items[index] + ' would you like to hire? Type 0 if none'
+    this.buildMessage.emit({text: text, reply: false})
+  }
+
   showSubTotalPrice(result: any){
     let text = ""
     if (result.tbc_value_exists == true){
@@ -183,6 +251,11 @@ export class LicenseComponent implements AfterViewInit {
     }
     else if (this.product.Product_Id == 1){
       this.showOptionsForm()
+    }
+    else if (this.product.Product_Id == 9){
+      this.onsitelogic = true;
+      this.showHireForm(this.current_item_index)
+      this.enable.emit(true)
     }
   }
 
@@ -320,17 +393,71 @@ export class LicenseComponent implements AfterViewInit {
 
   sendMessage(event: any){
     this.buildMessage.emit({text:event.message, reply:true})
-    if(!this.emailFlag){
-      if(checkingInputEmail(event.message))this.saveEmail.emit(event.message)
+
+    // Receive and verify email given
+    if(this.emailFlag){
+      if (checkingInputEmail(event.message)) {
+        this.saveEmail.emit(event.message)
+        this.enable.emit(false)
+      }
       else this.buildMessage.emit({text:"Please introduce a valid email"})
     }
+
+    // Other inputs
     else if(!this.emailFlag && this.email != ''){
       if (isNaN(event.message)){
-        this.buildMessage.emit({text:"Floorplans must have a numeric value. Please try again"})
+        this.buildMessage.emit({text:"Value must be numeric. Please try again"})
       }
       else {
-        this.enable.emit(false)
-        this.setFloorplans(event.message)
+        if (!this.onsitelogic && !this.onsitelogicDays){
+          this.setFloorplans(event.message)
+        }
+        // Onsitelogic for hire items
+        else if (this.onsitelogic && !this.onsitelogicDays){
+          Object.entries(this.selected_items).forEach(([key, value], index) => {
+            if (this.current_item_index == index){
+              this.selected_items[key] = parseInt(event.message)
+            }
+          });
+          console.log(this.selected_items)
+          this.current_item_index += 1
+
+          // Item for fire
+          if (this.current_item_index < this.items.length){
+            this.showHireForm(this.current_item_index)
+          }
+          else {
+            this.onsitelogicDays = true
+
+            // Ask for how many days they will hire
+            this.buildMessage.emit({text: 'How many days will the event last? Type 0 if not sure', reply: false})
+          }
+        }
+
+        else if (this.onsitelogic && this.onsitelogicDays){
+          this.days = parseInt(event.message)
+          this.onsitelogicDays = false
+          this.onsitelogic = false
+
+          if (this.days == 0){
+            this.days = "TBC"
+          }
+
+          let data = {
+            "Product": this.product.Product_Name,
+            "Years": this.years,
+            "Items": this.selected_items,
+            "Days": this.days,
+            "User": this.localStorageService.getCurrentItem('userId') || this.email,
+            "Date": getTimeFormat()
+          }
+
+          this.productsService.calculatePrice(data).subscribe((res) => {
+            this.result = res;
+            this.showSubTotalPrice(this.result)
+            this.enable.emit(false)
+          })
+        }
       }
     }
   }
