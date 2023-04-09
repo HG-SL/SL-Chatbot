@@ -77,7 +77,7 @@ export class LicenseComponent implements OnInit {
    * @param {[any]} product [Selected product]
    * */
   showProductPreferencesForm(product: any){
-    if (product.Product_Id == 2){
+    if (product.Product_Id == 2 || product.Product_Id == 4){
       this.showFlatFeeForm(product)
     }
     else if (product.Product_Id == 6 || product.Product_Id == 1 || product.Product_Id == 7){
@@ -89,8 +89,8 @@ export class LicenseComponent implements OnInit {
   }
 
   showFlatFeeForm(product: any){
-    // Participantlogic
-    if (product.Product_Id == 2){
+    // Participantlogic and Abstractlogic
+    if (product.Product_Id == 2 || product.Product_Id == 4) {
       this.getFlatFees(product.Product_Id)
       this.buildMessage.emit({reply: false, type: 'custom-flat-fee-view'})
     }
@@ -142,7 +142,7 @@ export class LicenseComponent implements OnInit {
 
   setFlatFee(flatFee: any){
     this.flatFee = Number(flatFee.replace(/[^0-9.-]+/g,""))
-    if (this.product.Product_Id == 2){
+    if (this.product.Product_Id == 2 || this.product.Product_Id == 4){
       this.showYearsForm()
     }
     this.setFlatFeeOut.emit(this.flatFee)
@@ -151,10 +151,10 @@ export class LicenseComponent implements OnInit {
   setYears(years: any){
     this.years = years
     // In participantlogic there's no record fee if the annual fee is 6K
-    if (this.product.Product_Id == 2 && this.flatFee != 6750){
+    if ((this.product.Product_Id == 2 || this.product.Product_Id == 4) && this.flatFee != 6750){
       this.showRecordsFeeForm()
     }
-    else if (this.product.Product_Id == 2 && this.flatFee == 6750){
+    else if ((this.product.Product_Id == 2 || this.product.Product_Id == 4) && this.flatFee == 6750){
       this.showProjectsFeeForm()
     }
     else if (this.product.Product_Id == 6 || this.product.Product_Id == 8 || this.product.Product_Id == 7){
@@ -167,7 +167,7 @@ export class LicenseComponent implements OnInit {
 
   setRecords(records: any){
     this.records = records
-    if (this.product.Product_Id == 2){
+    if (this.product.Product_Id == 2 || this.product.Product_Id == 4){
       this.showProjectsFeeForm()
     }
   }
@@ -176,6 +176,9 @@ export class LicenseComponent implements OnInit {
     this.projects = projects
     if (this.product.Product_Id == 2){
       this.showRegistrationForm()
+    }
+    else if (this.product.Product_Id == 4){
+      this.showTrainingForm()
     }
   }
 
@@ -232,7 +235,7 @@ export class LicenseComponent implements OnInit {
   setForms(forms: any){
     this.forms = forms
 
-    if (this.product.Product_Id == 2){
+    if (this.product.Product_Id == 2 || this.product.Product_Id == 4){
       let data = {
         "Product": this.product.Product_Name,
         "Years": this.years,
