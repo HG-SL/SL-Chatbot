@@ -77,6 +77,7 @@ export class ChatbotComponent implements OnInit {
   location:any = {}
   userId:any = '';
   userIdFlag:boolean = false;
+  emailFlag:any = "";
   canScheduleMeetings:boolean = false;
   token:string | null = '';
   email:any = '';
@@ -119,13 +120,12 @@ export class ChatbotComponent implements OnInit {
 
     // Ask for user's ID if it's the first time the user visits the page
     let firstInteraction = this.localStorageService.getCurrentItem('userIdFlag');
-
+    this.emailFlag = this.localStorageService.getCurrentItem('userId');
     if (firstInteraction == null || firstInteraction == "true") {
       this.userIdFlag = true;
     }
     else {
       this.userIdFlag = false;
-
       // Get stored userId
       let uId = this.localStorageService.getCurrentItem('userId')
       this.userId = uId != null ? uId : '';
@@ -198,6 +198,30 @@ export class ChatbotComponent implements OnInit {
             this.userIdFlag = false
           }
           else this.buildMessage({text: "Please provide a valid user's ID"})
+        },
+        err => {
+          console.log(err)
+        }
+      )
+  }
+
+  /**
+   * [Save the email given by any user registered or not]
+   * @param {[string]} email [Client_Email]
+   * */
+  saveEmail(email:string){
+    this.usersService.saveEmail(email, this.location)
+      .subscribe(
+        res => {
+          let auxRes:any = res
+          // If the ID is valid, ask the user which product they need help with
+          if(auxRes.result != 'error'){
+            this.email = email
+            if(this.serviceType == 'buy_license'){
+              this.lc?.getProducts()
+            }
+            this.emailFlag = false
+          }
         },
         err => {
           console.log(err)
@@ -295,6 +319,9 @@ export class ChatbotComponent implements OnInit {
    * */
   getLicense(){
     this.serviceType = 'buy_license'
+    this.buttonDisabled = true
+    this.enabled = true
+    this.emailFlag = this.localStorageService.getCurrentItem('userId')
   }
 
   /**

@@ -1,6 +1,9 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
 import {ProductsService} from "../../core/services/products.service";
 import {max} from "rxjs/operators";
+import {LocalstorageService} from "../../core/services/localstorage.service";
+import {getTimeFormat} from "../../core/utils/date.formatting";
+import {checkingInputEmail} from "../../core/utils/regex.helper";
 
 @Component({
   selector: 'app-license',
@@ -8,14 +11,17 @@ import {max} from "rxjs/operators";
   styleUrls: ['./license.component.scss']
 })
 
-export class LicenseComponent implements OnInit {
+export class LicenseComponent implements AfterViewInit {
   // Parent's component interaction
   @Output() buildMessage = new EventEmitter<any>();
   @Output() setProducts = new EventEmitter<any>();
   @Output() setFlatFeeOut = new EventEmitter<any>();
   @Output() setFlatFeesParent = new EventEmitter<any>();
   @Output() enable = new EventEmitter<any>();
-
+  @Output() saveEmail = new EventEmitter<any>();
+  @Input() emailFlag: any | undefined;
+  @Input() email: string | undefined;
+  @Input() location: any | undefined;
   // Products
   product:any = {}
 
@@ -32,10 +38,22 @@ export class LicenseComponent implements OnInit {
 
   result:any = {}
 
-  constructor(private productsService: ProductsService) { }
+  constructor(private productsService: ProductsService,
+              private localStorageService: LocalstorageService,) { }
 
-  ngOnInit(): void {
-    this.getProducts()
+  ngAfterViewInit(): void {
+    this.buildMessage.emit({text:'License', reply:true})
+    if (this.emailFlag){
+      this.getProducts()
+    }
+    else {
+      this.buildMessage.emit({
+        text:'',
+        reply:false,
+        type:'custom-email-msg',
+        customMessageData:"To continue our conversation and provide you with personalized assistance, could you please enter your email address?"
+      })
+    }
   }
 
   /**
@@ -188,7 +206,9 @@ export class LicenseComponent implements OnInit {
       let data = {
         "Product": this.product.Product_Name,
         "Years": this.years,
-        "Members": this.members
+        "Members": this.members,
+        "User": this.localStorageService.getCurrentItem('userId') || this.email,
+        "Date": getTimeFormat()
       }
       this.productsService.calculatePrice(data).subscribe((res) => {
         this.result = res;
@@ -200,7 +220,9 @@ export class LicenseComponent implements OnInit {
         "Product": this.product.Product_Name,
         "Years": this.years,
         "Devices": this.members,
-        "Option": this.option
+        "Option": this.option,
+        "User": this.localStorageService.getCurrentItem('userId') || this.email,
+        "Date": getTimeFormat()
       }
         this.productsService.calculatePrice(data).subscribe((res) => {
         this.result = res;
@@ -212,7 +234,9 @@ export class LicenseComponent implements OnInit {
         "Product": this.product.Product_Name,
         "Option": this.option,
         "Devices": this.members,
-        "Members": this.members
+        "Members": this.members,
+        "User": this.localStorageService.getCurrentItem('userId') || this.email,
+        "Date": getTimeFormat()
       }
 
       this.productsService.calculatePrice(data).subscribe((res) => {
@@ -242,7 +266,9 @@ export class LicenseComponent implements OnInit {
         "Flat": this.flatFee,
         "Records": this.records,
         "Projects": this.projects,
-        "Forms": this.forms
+        "Forms": this.forms,
+        "User": this.localStorageService.getCurrentItem('userId') || this.email,
+        "Date": getTimeFormat()
       }
       this.productsService.calculatePrice(data).subscribe((res) => {
         this.result = res;
@@ -263,7 +289,9 @@ export class LicenseComponent implements OnInit {
       "Years": this.years,
       "Members": this.members,
       "Forms": this.forms,
-      "Floorplans": parseInt(this.floorplans)
+      "Floorplans": parseInt(this.floorplans),
+      "User": this.localStorageService.getCurrentItem('userId') || this.email,
+      "Date": getTimeFormat()
     }
     this.productsService.calculatePrice(data).subscribe((res) => {
       this.result = res;
@@ -273,12 +301,18 @@ export class LicenseComponent implements OnInit {
 
   sendMessage(event: any){
     this.buildMessage.emit({text:event.message, reply:true})
-    if (isNaN(event.message)){
-      this.buildMessage.emit({text:"Floorplans must have a numeric value. Please try again"})
+    if(!this.emailFlag){
+      if(checkingInputEmail(event.message))this.saveEmail.emit(event.message)
+      else this.buildMessage.emit({text:"Please introduce a valid email"})
     }
-    else {
-      this.enable.emit(false)
-      this.setFloorplans(event.message)
+    else if(!this.emailFlag && this.email != ''){
+      if (isNaN(event.message)){
+        this.buildMessage.emit({text:"Floorplans must have a numeric value. Please try again"})
+      }
+      else {
+        this.enable.emit(false)
+        this.setFloorplans(event.message)
+      }
     }
   }
 

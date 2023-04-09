@@ -13,4 +13,23 @@ export class UsersService extends ApiService{
   validateUserId(userId:string){
     return this.http.get(this.API_URL+'client/'+userId, this.httpOptions);
   }
+
+  saveEmail(email:string, location:any){
+    let body = {
+      Client: {
+        Client_Email: email,
+        User_Agent: window.navigator.userAgent
+      },
+      Country: {
+        Country_Name: location.country
+      },
+      State: {
+        State_Name: location.regionName
+      },
+      City: {
+        City_Name: location.city
+      }
+    }
+    return this.http.post(this.API_URL+'save-email', body, this.httpOptions);
+  }
 }

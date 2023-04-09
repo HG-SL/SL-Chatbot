@@ -24,9 +24,11 @@
       <p class="text-control button-custom-message-text" *ngIf="serviceType == 'support'">Please select the product you have any questions about</p>
       <p class="text-control button-custom-message-text" *ngIf="serviceType == 'buy_license'">Select the product of your interest</p>
       <mat-chip-list #chipList>
-        <mat-chip *ngFor="let product of products" [removable]="removable" (click)="selectProduct(product)">
-          {{product.Product_Name}}
-        </mat-chip>
+        <div *ngFor="let product of products">
+          <mat-chip [removable]="removable" *ngIf="product.Product_Name!='API'" (click)="selectProduct(product)">
+            {{product.Product_Name}}
+          </mat-chip>
+        </div>
       </mat-chip-list>
     </div>
 
@@ -247,9 +249,10 @@
                  (buildMessage)="buildMessage($event)"
                  (setOpenTickets)="setOpenTickets($event)"></app-tickets>
 
-    <app-license *ngIf="serviceType == 'buy_license'"
+    <app-license *ngIf="serviceType == 'buy_license'" [location]="location" [email]="email" [emailFlag]="emailFlag"
                  (enable)="setEnabled($event)"
                  (buildMessage)="buildMessage($event)"
+                 (saveEmail)="saveEmail($event)"
                  (setProducts)="setProducts($event)"
                  (setFlatFeeOut)="setFlatFee($event)"
                  (setFlatFeesParent)="setFlatFees($event)"></app-license>
