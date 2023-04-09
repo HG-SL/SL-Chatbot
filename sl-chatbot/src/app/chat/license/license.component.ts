@@ -104,6 +104,9 @@ export class LicenseComponent implements AfterViewInit {
     else if (product.Product_Id == 8){
       this.showOptionsForm()
     }
+    else if (product.Product_Id == 10){
+      this.showProjectsFeeForm()
+    }
   }
 
   showFlatFeeForm(product: any){
@@ -188,6 +191,19 @@ export class LicenseComponent implements AfterViewInit {
     if (this.product.Product_Id == 2 || this.product.Product_Id == 4){
       this.showProjectsFeeForm()
     }
+    else if (this.product.Product_Id == 10){
+      let data = {
+        "Product": this.product.Product_Name,
+        "Projects": this.projects,
+        "Records": this.records,
+        "User": this.localStorageService.getCurrentItem('userId') || this.email,
+        "Date": getTimeFormat()
+      }
+      this.productsService.calculatePrice(data).subscribe((res) => {
+        this.result = res;
+        this.showSubTotalPrice(this.result)
+      })
+    }
   }
 
   setProjects(projects: any){
@@ -197,6 +213,9 @@ export class LicenseComponent implements AfterViewInit {
     }
     else if (this.product.Product_Id == 4){
       this.showTrainingForm()
+    }
+    else if (this.product.Product_Id == 10){
+      this.showRecordsFeeForm()
     }
   }
 

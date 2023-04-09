@@ -132,7 +132,9 @@
 
     <!-- Select records -->
     <div *nbCustomMessage="'custom-records-view';">
-      <p class="text-control button-custom-message-text">How many records do you plan to store?</p>
+      <p class="text-control button-custom-message-text" *ngIf="product.Product_Id != 10">How many records do you plan to store?</p>
+      <p class="text-control button-custom-message-text" *ngIf="product.Product_Id == 10">How many certificates do you want to print?</p>
+
       <button *ngFor="let r of recordList" class="mt-10" mat-button nbButton status="control" (click)="lc?.setRecords(r.value)">
         {{r.records}}
       </button>
