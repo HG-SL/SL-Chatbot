@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {QuestionsService} from 'src/app/core/services/questions.service'
 import {ProductsService} from 'src/app/core/services/products.service'
 import {UsersService} from 'src/app/core/services/users.service'
-import {NluService} from 'src/app/core/services/responses/nlu.service'
+import {AnswerService} from 'src/app/core/services/responses/answer.service'
 import {CHATBOT_AVATAR} from "../core/constants/constants"
 import {ScoreService} from "../core/services/responses/score.service";
 import {LocalstorageService} from "../core/services/localstorage.service";
@@ -107,7 +107,7 @@ export class ChatbotComponent implements OnInit {
     private questionService: QuestionsService,
     private productsService: ProductsService,
     private scoreService: ScoreService,
-    private nluService: NluService,
+    private nluService: AnswerService,
     private usersService: UsersService,
     private localStorageService: LocalstorageService,
     private JMUsersService: JMusersService
