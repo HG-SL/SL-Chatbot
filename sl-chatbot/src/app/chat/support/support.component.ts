@@ -5,7 +5,7 @@ import {UsersService} from "../../core/services/users.service";
 import {Answer} from "../../core/interfaces/interfaces";
 import {LocalstorageService} from "../../core/services/localstorage.service";
 import {QuestionsService} from "../../core/services/questions.service";
-import {NluService} from "../../core/services/responses/nlu.service";
+import {AnswerService} from "../../core/services/responses/answer.service";
 import {ScoreService} from "../../core/services/responses/score.service";
 import {JMusersService} from "../../core/services/v2/jmusers.service";
 
@@ -50,7 +50,7 @@ export class SupportComponent implements AfterViewInit {
               private usersService: UsersService,
               private localStorageService: LocalstorageService,
               private questionService: QuestionsService,
-              private nluService: NluService,
+              private nluService: AnswerService,
               private scoreService: ScoreService,
               private JMusersService: JMusersService) { }
 

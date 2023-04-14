@@ -4,6 +4,8 @@ import {max} from "rxjs/operators";
 import {LocalstorageService} from "../../core/services/localstorage.service";
 import {getTimeFormat} from "../../core/utils/date.formatting";
 import {checkingInputEmail} from "../../core/utils/regex.helper";
+import {QuestionsService} from "../../core/services/questions.service";
+import {AnswerService} from "../../core/services/responses/answer.service";
 
 @Component({
   selector: 'app-license',
@@ -102,10 +104,14 @@ export class LicenseComponent implements AfterViewInit {
   result:any = {}
 
   constructor(private productsService: ProductsService,
+              private questionsService: QuestionsService,
+              private answerService: AnswerService,
               private localStorageService: LocalstorageService,) { }
 
   ngAfterViewInit(): void {
     this.buildMessage.emit({text:'License', reply:true})
+
+    // Show product list if it's not needed to ask for email first
     if (!this.emailFlag){
       this.getProducts()
     }
@@ -135,6 +141,9 @@ export class LicenseComponent implements AfterViewInit {
       )
   }
 
+  /**
+   * [Get the list of flat fees of a specified product]
+   * */
   getFlatFees(productId: number){
     // @ts-ignore
     this.productsService.getFlatFees(productId).subscribe(({fees}) => {
@@ -151,6 +160,15 @@ export class LicenseComponent implements AfterViewInit {
   selectProduct(product:any){
     this.product = product
     this.showProductPreferencesForm(product)
+  }
+
+  /**
+   * [Show the full list of products, this function is going to be triggered on back button click]
+   * */
+  showProductSelectionForm(product: any){
+    if (product.Product_Id == 8){
+      this.buildMessage.emit({reply: false, type: 'custom-products-msg'})
+    }
   }
 
   /**
@@ -172,6 +190,9 @@ export class LicenseComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * [Show custom menu that will show options for flat annual fees on specific products]
+   * */
   showFlatFeeForm(product: any){
     // Participantlogic and Abstractlogic
     if (product.Product_Id == 2 || product.Product_Id == 4) {
@@ -183,41 +204,72 @@ export class LicenseComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * [Show custom menu that will show options for number of members]
+   * */
   showMembersForm(){
     this.buildMessage.emit({reply: false, type: 'custom-members-view'})
   }
 
+  /**
+   * [Show custom menu that will show options for years of subscription]
+   * */
   showYearsForm(){
     this.buildMessage.emit({reply: false, type: 'custom-years-view'})
   }
 
+  /**
+   * [Show custom menu that will show options for number of records]
+   * */
   showRecordsFeeForm(){
     this.buildMessage.emit({reply: false, type: 'custom-records-view'})
   }
 
+  /**
+   * [Show custom menu that will show options for number of projects]
+   * */
   showProjectsFeeForm(){
     this.buildMessage.emit({reply: false, type: 'custom-projects-view'})
   }
 
+  /**
+   * [Show custom menu that will show options for number of registration forms]
+   * */
   showRegistrationForm(){
     this.buildMessage.emit({reply: false, type: 'custom-forms-view'})
   }
 
+  /**
+   * [Show custom menu that will show options for license modes]
+   * */
   showOptionsForm(){
     this.buildMessage.emit({reply: false, type: 'custom-options-view'})
   }
 
+  /**
+   * [Show custom menu that will ask the user if any training is required]
+   * */
   showTrainingForm(){
     this.buildMessage.emit({reply: false, type: 'custom-training-view'})
   }
 
+  /**
+   * [Show prompt that will ask the user item for hire]
+   * */
   showHireForm(index: number){
     let text = 'How many items of ' + this.items[index] + ' would you like to hire? Type 0 if none'
     this.buildMessage.emit({text: text, reply: false})
   }
 
+  /**
+   * [Show estimate price after all parameters have been taken]
+   * */
   showSubTotalPrice(result: any){
+    this.saveStep("Sub-total price", result.final_price.toString())
+
     let text = ""
+
+    // If some estimates couldn't be calculated precisely it will tell the user which ones are those
     if (result.tbc_value_exists == true){
       text = "The estimate price is " + result.final_price.toString() + ". Keep in mind that this does not include the " +
         "actual prices of " + result.tbc_value.toString()
@@ -229,16 +281,29 @@ export class LicenseComponent implements AfterViewInit {
       reply: false})
   }
 
+  /**
+   * [Receive preferred flat fee amount from the user
+   * @param {[flatFee]}
+   * ]
+   * */
   setFlatFee(flatFee: any){
     this.flatFee = Number(flatFee.replace(/[^0-9.-]+/g,""))
+    this.saveStep("Product's flat fee", this.flatFee.toString())
+
     if (this.product.Product_Id == 2 || this.product.Product_Id == 4){
       this.showYearsForm()
     }
     this.setFlatFeeOut.emit(this.flatFee)
   }
 
+  /**
+   * [Receive preferred years of subscription from the user
+   * @param {[years]}]
+   * */
   setYears(years: any){
     this.years = years
+    this.saveStep("For how many years would you like to subscribe?", this.years)
+
     // In participantlogic there's no record fee if the annual fee is 6K
     if ((this.product.Product_Id == 2 || this.product.Product_Id == 4) && this.flatFee != 6750){
       this.showRecordsFeeForm()
@@ -252,6 +317,7 @@ export class LicenseComponent implements AfterViewInit {
     else if (this.product.Product_Id == 1){
       this.showOptionsForm()
     }
+    // Ask the user about items needed to hire
     else if (this.product.Product_Id == 9){
       this.onsitelogic = true;
       this.showHireForm(this.current_item_index)
@@ -259,8 +325,14 @@ export class LicenseComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * [Receive preferred number of records from the user
+   * @param {[records]}]
+   * */
   setRecords(records: any){
     this.records = records
+    this.saveStep("Number of records to store", this.records.toString())
+
     if (this.product.Product_Id == 2 || this.product.Product_Id == 4){
       this.showProjectsFeeForm()
     }
@@ -279,8 +351,14 @@ export class LicenseComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * [Receive preferred number of projects from the user
+   * @param {[projects]}]
+   * */
   setProjects(projects: any){
     this.projects = projects
+    this.saveStep("Number of projects", this.projects.toString())
+
     if (this.product.Product_Id == 2){
       this.showRegistrationForm()
     }
@@ -292,8 +370,14 @@ export class LicenseComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * [Receive preferred number of members/devices from the user
+   * @param {[members]}]
+   * */
   setMembers(members: any){
     this.members = members
+    this.saveStep("Number of members/devices that will use the software", this.members.toString())
+
     if (this.product.Product_Id == 6){
       let data = {
         "Product": this.product.Product_Name,
@@ -341,15 +425,26 @@ export class LicenseComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * [Receive preferred license mode from the user
+   * @param {[option]}]
+   * */
   setOption(option: any){
     this.option = option
+    this.saveStep("License mode (option)", this.option)
+
     if ((this.product.Product_Id == 1) || (this.product.Product_Id == 8)){
       this.showMembersForm()
     }
   }
 
+  /**
+   * [Receive either preferred number of registration forms or if any training is required
+   * @param {[forms]}]
+   * */
   setForms(forms: any){
     this.forms = forms
+    this.saveStep("Number of registration forms required or if any training is required", this.forms)
 
     if (this.product.Product_Id == 2 || this.product.Product_Id == 4){
       let data = {
@@ -374,8 +469,14 @@ export class LicenseComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * [Receive preferred number of floorplans from the user
+   * @param {[floorplans]}]
+   * */
   setFloorplans(floorplans: any){
     this.floorplans = floorplans
+    this.saveStep("Number of floorplans", this.floorplans.toString())
+
     let data = {
       "Product": this.product.Product_Name,
       "Years": this.years,
@@ -391,6 +492,57 @@ export class LicenseComponent implements AfterViewInit {
     })
   }
 
+  // TODO: Don't ask for email if there's already an userID in localstorage
+  saveStep(step: string, amount: any){
+    let body = {
+      Client: {
+        Client_Email: this.email,
+        User_Agent: window.navigator.userAgent,
+        User_Id: null
+      },
+      Organization: {
+
+      },
+      Product: {
+        Product_Id: this.product.Product_Id,
+        Product_Name: this.product.Product_Name
+      },
+      Country: {
+        Country_Name: this.location.country
+      },
+      State: {
+        State_Name: this.location.regionName
+      },
+      City: {
+        City_Name: this.location.city
+      },
+      Question: {
+        Description: step,
+        FK_Product_Id: this.product.Product_Id,
+        Question_Date: getTimeFormat(),
+        Channel: "Webpage"
+      }
+    }
+
+    // @ts-ignore
+    this.questionsService.savequestion(body, "sales").subscribe(({Question_Id, Question_Date, Client_Id}) => {
+      let body_answer = {
+        Question_Id: Question_Id,
+        Question_Date: Question_Date,
+        Client_Id: Client_Id,
+        Amount: amount
+      }
+
+      this.answerService.saveAnswerProduct(body_answer)
+        .subscribe((res) => {
+      })
+    })
+  }
+
+  /**
+   * [Validate and process message that is sent by the user
+   * @param {[event]}]
+   * */
   sendMessage(event: any){
     this.buildMessage.emit({text:event.message, reply:true})
 
@@ -417,9 +569,9 @@ export class LicenseComponent implements AfterViewInit {
           Object.entries(this.selected_items).forEach(([key, value], index) => {
             if (this.current_item_index == index){
               this.selected_items[key] = parseInt(event.message)
+              this.saveStep(this.items[index], parseInt(event.message))
             }
           });
-          console.log(this.selected_items)
           this.current_item_index += 1
 
           // Item for fire

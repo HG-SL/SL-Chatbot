@@ -4,7 +4,7 @@ import { ApiService } from '../api.service'
 @Injectable({
   providedIn: 'root'
 })
-export class NluService extends ApiService {
+export class AnswerService extends ApiService {
 
   /**
    * [Will clean up user's input for a proper response generation]
@@ -21,5 +21,13 @@ export class NluService extends ApiService {
     }
 
     return this.http.post(this.API_URL+'generate-answer', body, this.httpOptions);
+  }
+
+  /**
+   * [Will save user's flow step in sales]
+   * @return {[Object]} [Response object]
+   * */
+  saveAnswerProduct(body: any){
+    return this.http.post(this.API_URL+'save-answer-product', body, this.httpOptions);
   }
 }
