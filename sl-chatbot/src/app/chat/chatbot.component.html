@@ -24,9 +24,18 @@
       <p class="text-control button-custom-message-text" *ngIf="serviceType == 'support'">Please select the product you have any questions about</p>
       <p class="text-control button-custom-message-text" *ngIf="serviceType == 'buy_license'">Select the product of your interest</p>
       <mat-chip-list #chipList>
-        <mat-chip *ngFor="let product of products" [removable]="removable" (click)="selectProduct(product)">
-          {{product.Product_Name}}
-        </mat-chip>
+        <div *ngFor="let product of products">
+          <div *ngIf="serviceType == 'buy_license'">
+            <mat-chip [removable]="removable" *ngIf="product.Product_Name!='API'" (click)="selectProduct(product)">
+              {{product.Product_Name}}
+            </mat-chip>
+          </div>
+          <div *ngIf="serviceType == 'support'">
+            <mat-chip [removable]="removable" (click)="selectProduct(product)">
+              {{product.Product_Name}}
+            </mat-chip>
+          </div>
+        </div>
       </mat-chip-list>
     </div>
 
@@ -108,7 +117,7 @@
 
     <!-- Select flat fee -->
     <div *nbCustomMessage="'custom-flat-fee-view';">
-      <p class="text-control button-custom-message-text">Select the annual plan you prefer. Keep in mind that the annual plan of higher amount does not charge additional fees per record</p>
+      <p class="text-control button-custom-message-text">Select the annual plan you prefer. Bear in mind that the annual plan of higher amount does not charge additional fees per record</p>
       <button *ngFor="let fee of flatFees" class="mt-10" mat-button nbButton status="control" (click)="lc?.setFlatFee(fee)">
         {{fee}}
       </button>
@@ -130,7 +139,9 @@
 
     <!-- Select records -->
     <div *nbCustomMessage="'custom-records-view';">
-      <p class="text-control button-custom-message-text">How many records do you plan to store?</p>
+      <p class="text-control button-custom-message-text" *ngIf="product.Product_Id != 10">How many records do you plan to store?</p>
+      <p class="text-control button-custom-message-text" *ngIf="product.Product_Id == 10">How many certificates do you want to print?</p>
+
       <button *ngFor="let r of recordList" class="mt-10" mat-button nbButton status="control" (click)="lc?.setRecords(r.value)">
         {{r.records}}
       </button>
@@ -213,7 +224,7 @@
       <button class="mt-10" mat-button nbButton *ngIf="product.Product_Id == 1" (click)="lc?.showYearsForm()">
         Back
       </button>
-      <button class="mt-10" mat-button nbButton *ngIf="product.Product_Id == 8" (click)="lc?.showProductPreferencesForm(product)">
+      <button class="mt-10" mat-button nbButton *ngIf="product.Product_Id == 8" (click)="lc?.showProductSelectionForm(product)">
         Back
       </button>
     </div>
@@ -247,9 +258,10 @@
                  (buildMessage)="buildMessage($event)"
                  (setOpenTickets)="setOpenTickets($event)"></app-tickets>
 
-    <app-license *ngIf="serviceType == 'buy_license'"
+    <app-license *ngIf="serviceType == 'buy_license'" [location]="location" [email]="email" [emailFlag]="emailFlag"
                  (enable)="setEnabled($event)"
                  (buildMessage)="buildMessage($event)"
+                 (saveEmail)="saveEmail($event)"
                  (setProducts)="setProducts($event)"
                  (setFlatFeeOut)="setFlatFee($event)"
                  (setFlatFeesParent)="setFlatFees($event)"></app-license>

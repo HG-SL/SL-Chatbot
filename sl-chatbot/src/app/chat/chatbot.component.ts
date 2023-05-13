@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {QuestionsService} from 'src/app/core/services/questions.service'
 import {ProductsService} from 'src/app/core/services/products.service'
 import {UsersService} from 'src/app/core/services/users.service'
-import {NluService} from 'src/app/core/services/responses/nlu.service'
+import {AnswerService} from 'src/app/core/services/responses/answer.service'
 import {CHATBOT_AVATAR} from "../core/constants/constants"
 import {ScoreService} from "../core/services/responses/score.service";
 import {LocalstorageService} from "../core/services/localstorage.service";
@@ -50,13 +50,13 @@ export class ChatbotComponent implements OnInit {
 
   // Estimates
   recordList: any = [
-    {"records": "0-100", "value": 50},
+    {"records": "1-100", "value": 50},
     {"records": "101-200", "value": 150},
     {"records": "201-3999", "value": 2000},
     {"records": "4000+", "value": 4000}
   ]
   projectList: any = [
-    {"projects": "0-100", "value": 50},
+    {"projects": "1-100", "value": 50},
     {"projects": "101-200", "value": 150},
     {"projects": "200-3999", "value": 500}
   ]
@@ -77,6 +77,7 @@ export class ChatbotComponent implements OnInit {
   location:any = {}
   userId:any = '';
   userIdFlag:boolean = false;
+  emailFlag:any = "";
   canScheduleMeetings:boolean = false;
   token:string | null = '';
   email:any = '';
@@ -106,7 +107,7 @@ export class ChatbotComponent implements OnInit {
     private questionService: QuestionsService,
     private productsService: ProductsService,
     private scoreService: ScoreService,
-    private nluService: NluService,
+    private nluService: AnswerService,
     private usersService: UsersService,
     private localStorageService: LocalstorageService,
     private JMUsersService: JMusersService
@@ -115,20 +116,30 @@ export class ChatbotComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLocation() // Get IP address
-    this.buildMessage({text: 'Hello, how can I help you?', reply: false, type:'button', customMessageData:'Support'}) // Greeting
+    this.buildMessage({
+      text: 'Hello, how can I help you?',
+      reply: false,
+      type:'button',
+      customMessageData:'Support'
+    }) // Greeting
 
     // Ask for user's ID if it's the first time the user visits the page
     let firstInteraction = this.localStorageService.getCurrentItem('userIdFlag');
+    this.emailFlag = this.localStorageService.getCurrentItem('userId');
 
     if (firstInteraction == null || firstInteraction == "true") {
       this.userIdFlag = true;
     }
     else {
       this.userIdFlag = false;
-
       // Get stored userId
       let uId = this.localStorageService.getCurrentItem('userId')
       this.userId = uId != null ? uId : '';
+    }
+
+    // Email flag for potential customers
+    if (firstInteraction == null && this.emailFlag == null){
+      this.emailFlag = true;
     }
   }
 
@@ -198,6 +209,30 @@ export class ChatbotComponent implements OnInit {
             this.userIdFlag = false
           }
           else this.buildMessage({text: "Please provide a valid user's ID"})
+        },
+        err => {
+          console.log(err)
+        }
+      )
+  }
+
+  /**
+   * [Save the email given by any user registered or not]
+   * @param {[string]} email [Client_Email]
+   * */
+  saveEmail(email:string){
+    this.usersService.saveEmail(email, this.location)
+      .subscribe(
+        res => {
+          let auxRes:any = res
+          // If the ID is valid, ask the user which product they need help with
+          if(auxRes.result != 'error'){
+            this.email = email
+            if(this.serviceType == 'buy_license'){
+              this.lc?.getProducts()
+            }
+            this.emailFlag = false
+          }
         },
         err => {
           console.log(err)
@@ -295,6 +330,8 @@ export class ChatbotComponent implements OnInit {
    * */
   getLicense(){
     this.serviceType = 'buy_license'
+    this.buttonDisabled = true
+    this.enabled = true
   }
 
   /**
@@ -310,3 +347,5 @@ export class ChatbotComponent implements OnInit {
     }
   }
 }
+
+// TODO: For projects we have to ask how many projects are planned to be used: 1, 2 or more than 2 (TBC)
